@@ -1,0 +1,26 @@
+#include <SDL3/SDL.h>
+
+typedef struct game_task {
+	void (*on_event)(struct game_task *);
+	void (*on_tick)(struct game_task *);
+	void (*free)(struct game_task *);
+
+	struct game_state *game;
+	SDL_Event *event; /* last event */
+	void *data;
+
+	/* Intrusive linked list */
+	struct game_task *prev;
+	struct game_task *next;
+} game_task;
+
+typedef struct game_state {
+        struct game_task tasks;
+} game_state;
+
+int game_add_task(game_state *game, game_task *task);
+int game_init(game_state *game);
+int game_switch_event(game_task *task, uint32_t event_type, void (*handler)(game_task *));
+void game_free(game_task *task);
+void game_fire(game_state *game, SDL_Event *event);
+void game_tick(game_state *game);

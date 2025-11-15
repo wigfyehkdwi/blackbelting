@@ -1,2 +1,2 @@
 #!/bin/sh
-gcc main.c /mingw64/bin/SDL3.dll
+gcc *.c /mingw64/bin/SDL3.dll
