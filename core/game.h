@@ -1,4 +1,6 @@
 #include <SDL3/SDL.h>
+#include <stdbool.h>
+#include <stdlib.h>
 
 typedef struct game_task {
 	void (*on_event)(struct game_task *);
@@ -15,11 +17,14 @@ typedef struct game_task {
 } game_task;
 
 typedef struct game_state {
+	bool aborted;
         struct game_task tasks;
 } game_state;
 
-int game_add_task(game_state *game, game_task *task);
-int game_init(game_state *game);
+void game_spawn(game_state *game, game_task *task);
+void game_kill(game_task *task);
+void game_init(game_state *game);
+game_task *game_new_task();
 int game_switch_event(game_task *task, uint32_t event_type, void (*handler)(game_task *));
 void game_free(game_task *task);
 void game_fire(game_state *game, SDL_Event *event);

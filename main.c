@@ -1,4 +1,5 @@
-#include "game.h"
+#include "core/game.h"
+#include "task/quit_handler.h"
 
 int main(int argc, char *argv[]) {
 	if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
@@ -15,9 +16,12 @@ int main(int argc, char *argv[]) {
 
 	game_state game;
 	game_init(&game);
+	/* test code */
+	game_task *new_task = quit_handler();
+	game_spawn(&game, new_task);
 
-	while (1) {
-		SDL_Event event;
+	SDL_Event event;
+	while (!game.aborted) {
 		while (SDL_PollEvent(&event)) {
 			game_fire(&game, &event);
 		}
