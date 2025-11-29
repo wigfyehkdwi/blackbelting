@@ -16,14 +16,16 @@ int main(int argc, char *argv[]) {
 
 	game_state game;
 	game_init(&game);
+	game.window = window;
+	game.renderer = SDL_GetRenderer(window);
+
 	/* test code */
 	game_task *new_task = quit_handler();
 	game_spawn(&game, new_task);
 
-	SDL_Event event;
 	while (!game.aborted) {
-		while (SDL_PollEvent(&event)) {
-			game_fire(&game, &event);
+		while (SDL_PollEvent(&game.event)) {
+			game_event(&game);
 		}
 		game_tick(&game);
 	}

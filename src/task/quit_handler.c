@@ -10,7 +10,7 @@ game_task *quit_handler() {
 }
 
 static void handle_event(game_task *self) {
-	if (self->event->type == SDL_EVENT_QUIT) {
+	if (self->game->event.type == SDL_EVENT_QUIT) {
 		self->game->aborted = true;
 	}
 }

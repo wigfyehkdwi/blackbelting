@@ -40,21 +40,22 @@ game_task *game_new_task() {
 }
 
 int game_switch_event(game_task *task, uint32_t event_type, void (*handler)(game_task *)) {
-	int flag = task->event->type == event_type;
+	int flag = task->game->event.type == event_type;
 
 	if (flag) handler(task);
 	return flag;
 }
 
-void game_fire(game_state *game, SDL_Event *event) {
+void game_event(game_state *game) {
 	for (game_task *task = game->tasks.next; task != &game->tasks; task = task->next) {
-		task->event = event;
 		task->on_event(task);
 	}
 }
 
 void game_tick(game_state *game) {
+	SDL_RenderClear(game->renderer);
 	for (game_task *task = game->tasks.next; task != &game->tasks; task = task->next) {
 		task->on_tick(task);
 	}
+	SDL_RenderPresent(game->renderer);
 }
