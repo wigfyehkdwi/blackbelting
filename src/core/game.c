@@ -8,6 +8,8 @@ void game_spawn(game_state *game, game_task *task) {
 	task->next = &game->tasks;
 
 	task->game = game;
+
+	task->on_spawn(task);
 }
 
 void game_kill(game_task *task) {
@@ -33,6 +35,7 @@ static void game_default_free(game_task *self) {
 
 game_task *game_new_task() {
 	game_task *task = calloc(sizeof(game_task), 1);
+	task->on_spawn = game_nop;
 	task->on_event = game_nop;
 	task->on_tick = game_nop;
 	task->free = game_default_free;

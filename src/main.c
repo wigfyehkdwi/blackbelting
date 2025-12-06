@@ -1,5 +1,6 @@
 #include "core/game.h"
 #include "task/quit_handler.h"
+#include "task/sprite_test.h"
 
 int main(int argc, char *argv[]) {
 	if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
@@ -20,8 +21,8 @@ int main(int argc, char *argv[]) {
 	game.renderer = SDL_GetRenderer(window);
 
 	/* test code */
-	game_task *new_task = quit_handler();
-	game_spawn(&game, new_task);
+	game_spawn(&game, quit_handler());
+	game_spawn(&game, sprite_test());
 
 	while (!game.aborted) {
 		while (SDL_PollEvent(&game.event)) {

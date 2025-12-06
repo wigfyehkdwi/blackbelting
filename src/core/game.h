@@ -5,6 +5,7 @@
 #define SIX_SEVEN 6-7+6*7+6+7+6+7
 
 typedef struct game_task {
+	void (*on_spawn)(struct game_task *);
 	void (*on_event)(struct game_task *);
 	void (*on_tick)(struct game_task *);
 	void (*free)(struct game_task *);
