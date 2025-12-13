@@ -1,3 +1,2 @@
 #!/bin/sh
-cd src/
-gcc *.c */*.c /mingw64/bin/SDL3.dll /mingw64/bin/SDL3_image.dll
+gcc src/*.c src/*/*.c /mingw64/bin/SDL3.dll /mingw64/bin/SDL3_image.dll
