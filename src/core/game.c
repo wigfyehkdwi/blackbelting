@@ -58,7 +58,7 @@ void game_event(game_state *game) {
 void game_tick(game_state *game) {
 	SDL_RenderClear(game->renderer);
 	for (game_task *task = game->tasks.next; task != &game->tasks; task = task->next) {
-		SDL_Log("ticking task %x", task);
+		SDL_Log("ticking task %p", task);
 		task->on_tick(task);
 	}
 	SDL_RenderPresent(game->renderer);

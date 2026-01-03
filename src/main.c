@@ -8,7 +8,7 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 
-	SDL_Window *window = SDL_CreateWindow("Test window", 640, 480, 0);
+	SDL_Window *window = SDL_CreateWindow("Test window", 640, 480, SDL_WINDOW_OPENGL);
 
 	if (window == NULL) {
 		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "Could not create window: %s", SDL_GetError());
@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
 	game_state game;
 	game_init(&game);
 	game.window = window;
-	SDL_SetError("testing......");
+
 	game.renderer = SDL_GetRenderer(window);
 
 	if (game.renderer == NULL) {
