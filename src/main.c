@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
 	game_init(&game);
 	game.window = window;
 
-	game.renderer = SDL_GetRenderer(window);
+	game.renderer = SDL_CreateRenderer(window, NULL);
 
 	if (game.renderer == NULL) {
 		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "Failed to get renderer: %s", SDL_GetError());
