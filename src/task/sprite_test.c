@@ -25,7 +25,10 @@ static int load_resources(game_task *self) {
 }
 
 static void handle_tick(game_task *self) {
-	self->sprite->x = 6;
-	self->sprite->y = 9;
+	self->sprite->x = 300;
+	self->sprite->y = 300;
 	game_draw(self->sprite, self->game->renderer);
+
+	SDL_SetRenderDrawColor(self->game->renderer, 0, 255, 255, 255);
+	SDL_RenderDebugText(self->game->renderer, 100, 100, "hello world!");
 }
