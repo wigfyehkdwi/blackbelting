@@ -46,3 +46,5 @@ void game_free(game_task *task);
 void game_event(game_state *game);
 void game_tick(game_state *game);
 int game_draw(game_sprite *sprite, SDL_Renderer *renderer);
+bool game_is_touching_mouse(game_sprite *sprite, int x, int y);
+int game_is_clicked(game_sprite *sprite, SDL_Event *event);

@@ -1,9 +1,9 @@
 #include "../core/game.h"
-#include "quit_handler.h"
 
 #include <SDL3_image/SDL_image.h>
 static int load_resources(game_task *self);
 static void handle_tick(game_task *self);
+static void handle_event(game_task *self);
 
 game_task *sprite_test() {
 	game_task *task = game_new_task();
@@ -11,6 +11,7 @@ game_task *sprite_test() {
 
 	task->on_spawn = load_resources;
 	task->on_tick = handle_tick;
+	task->on_event = handle_event;
 	return task;
 }
 
@@ -21,14 +22,24 @@ static int load_resources(game_task *self) {
 	self->sprite->texture = IMG_LoadTexture(self->game->renderer, "res/test.png");
 	if (self->sprite->texture == NULL) return -1;
 
+	self->sprite->x = 300;
+	self->sprite->y = 300;
 	return 0;
 }
 
 static void handle_tick(game_task *self) {
-	self->sprite->x = 300;
-	self->sprite->y = 300;
+	SDL_SetRenderDrawColor(self->game->renderer, 0, 0, 0, 255);
+	SDL_RenderClear(self->game->renderer);
+
 	game_draw(self->sprite, self->game->renderer);
 
 	SDL_SetRenderDrawColor(self->game->renderer, 0, 255, 255, 255);
 	SDL_RenderDebugText(self->game->renderer, 100, 100, "hello world!");
+}
+
+static void handle_event(game_task *self) {
+	if (game_is_clicked(self->sprite, &self->game->event) == 2) {
+		self->sprite->x = SDL_rand(300);
+		self->sprite->y = SDL_rand(300);
+	}
 }

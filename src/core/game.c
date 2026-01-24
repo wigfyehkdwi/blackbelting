@@ -84,3 +84,20 @@ int game_draw(game_sprite *sprite, SDL_Renderer *renderer) {
 	rect.h = texture->h;
 	return SDL_RenderTexture(renderer, texture, NULL, &rect);
 }
+
+bool game_is_touching_mouse(game_sprite *sprite, int x, int y) {
+	if (x < sprite->x || x > (sprite->x + sprite->texture->w)) return false;
+	if (y < sprite->y || y > (sprite->y + sprite->texture->h)) return false;
+	return true;
+}
+
+int game_is_clicked(game_sprite *sprite, SDL_Event *event) {
+	int result;
+	if (event->type == SDL_EVENT_MOUSE_BUTTON_DOWN) result = 1;
+	else if (event->type == SDL_EVENT_MOUSE_BUTTON_UP) result = 2;
+	else return 0;
+
+	/* check if the click is within the range of the sprite */
+	SDL_MouseButtonEvent *mouse = (SDL_MouseButtonEvent *)event;
+	return game_is_touching_mouse(sprite, mouse->x, mouse->y) ? result : 0;
+}
