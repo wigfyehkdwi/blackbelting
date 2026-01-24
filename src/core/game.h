@@ -17,6 +17,8 @@ typedef struct game_camera {
 } game_camera;
 
 typedef struct game_task {
+	int z;
+
 	int (*on_spawn)(struct game_task *);
 	void (*on_event)(struct game_task *);
 	void (*on_tick)(struct game_task *);

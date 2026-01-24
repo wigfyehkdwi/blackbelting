@@ -1,11 +1,13 @@
 #include "game.h"
 
 int game_spawn(game_state *game, game_task *task) {
-	game->tasks.prev->next = task;
-	task->prev = game->tasks.prev;
+	game_task *prev = game->tasks.;
+	for (game_task *candidate = game->tasks.next; candidate != &game->tasks; candidate = candidate->next) {
+		if (candidate->z > task->z) break;
+		prev = candidate;	
+	}
 
-	game->tasks.prev = task;
-	task->next = &game->tasks;
+	/* im too tired to do the rest for now */
 
 	task->game = game;
 
