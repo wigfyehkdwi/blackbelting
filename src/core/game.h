@@ -8,7 +8,13 @@ typedef struct game_sprite {
 	int x;
 	int y;
 	SDL_Texture *texture;
+	bool ui;
 } game_sprite;
+
+typedef struct game_camera {
+	int x;
+	int y;
+} game_camera;
 
 typedef struct game_task {
 	int (*on_spawn)(struct game_task *);
@@ -31,6 +37,7 @@ typedef struct game_state {
 	SDL_Event event;
 	int ticks;
 	int delta;
+	game_camera camera;
 
 	SDL_Window *window;
 	SDL_Renderer *renderer;
@@ -45,6 +52,6 @@ int game_switch_event(game_task *task, uint32_t event_type, void (*handler)(game
 void game_free(game_task *task);
 void game_event(game_state *game);
 void game_tick(game_state *game);
-int game_draw(game_sprite *sprite, SDL_Renderer *renderer);
-bool game_is_touching_mouse(game_sprite *sprite, int x, int y);
-int game_is_clicked(game_sprite *sprite, SDL_Event *event);
+int game_draw(game_task *task);
+bool game_is_touching(game_sprite *sprite, int x, int y);
+int game_is_clicked(game_task *task);

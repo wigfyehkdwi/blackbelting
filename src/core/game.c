@@ -75,29 +75,49 @@ void game_tick(game_state *game) {
 	SDL_RenderPresent(game->renderer);
 }
 
-int game_draw(game_sprite *sprite, SDL_Renderer *renderer) {
+int game_draw(game_task *task) {
+	game_sprite *sprite = task->sprite;
+	game_state *game = task->game;
+
 	SDL_Texture *texture = sprite->texture;
 	SDL_FRect rect;
 	rect.x = sprite->x;
 	rect.y = sprite->y;
 	rect.w = texture->w;
 	rect.h = texture->h;
-	return SDL_RenderTexture(renderer, texture, NULL, &rect);
+
+	if (!sprite->ui) {
+		rect.x -= game->camera.x;
+		rect.y -= game->camera.y;
+	}
+
+	return SDL_RenderTexture(game->renderer, texture, NULL, &rect);
 }
 
-bool game_is_touching_mouse(game_sprite *sprite, int x, int y) {
+bool game_is_touching(game_sprite *sprite, int x, int y) {
 	if (x < sprite->x || x > (sprite->x + sprite->texture->w)) return false;
 	if (y < sprite->y || y > (sprite->y + sprite->texture->h)) return false;
 	return true;
 }
 
-int game_is_clicked(game_sprite *sprite, SDL_Event *event) {
+int game_is_clicked(game_task *task) {
+	game_sprite *sprite = task->sprite;
+	game_state *game = task->game;
+	SDL_Event *event = &game->event;
+
 	int result;
 	if (event->type == SDL_EVENT_MOUSE_BUTTON_DOWN) result = 1;
 	else if (event->type == SDL_EVENT_MOUSE_BUTTON_UP) result = 2;
 	else return 0;
 
-	/* check if the click is within the range of the sprite */
-	SDL_MouseButtonEvent *mouse = (SDL_MouseButtonEvent *)event;
-	return game_is_touching_mouse(sprite, mouse->x, mouse->y) ? result : 0;
+	SDL_MouseButtonEvent *mouse_event = (SDL_MouseButtonEvent *)event;
+	int mx = mouse_event->x;
+	int my = mouse_event->y;
+
+	if (!sprite->ui) {
+		mx += task->game->camera.x;
+		my += task->game->camera.y;
+	}
+
+	return game_is_touching(sprite, mx, my) ? result : 0;
 }

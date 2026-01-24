@@ -24,6 +24,7 @@ static int load_resources(game_task *self) {
 
 	self->sprite->x = 300;
 	self->sprite->y = 300;
+	/* self->sprite->ui = true; */
 	return 0;
 }
 
@@ -31,15 +32,15 @@ static void handle_tick(game_task *self) {
 	SDL_SetRenderDrawColor(self->game->renderer, 0, 0, 0, 255);
 	SDL_RenderClear(self->game->renderer);
 
-	game_draw(self->sprite, self->game->renderer);
+	game_draw(self);
 
 	SDL_SetRenderDrawColor(self->game->renderer, 0, 255, 255, 255);
-	SDL_RenderDebugText(self->game->renderer, 100, 100, "hello world!");
+	SDL_RenderDebugText(self->game->renderer, 100 - self->game->camera.x, 100 - self->game->camera.y, "hello world!");
 }
 
 static void handle_event(game_task *self) {
-	if (game_is_clicked(self->sprite, &self->game->event) == 2) {
-		self->sprite->x = SDL_rand(300);
-		self->sprite->y = SDL_rand(300);
+	if (game_is_clicked(self) == 2) {
+		self->game->camera.x = SDL_rand(300);
+		self->game->camera.y = SDL_rand(300);
 	}
 }
