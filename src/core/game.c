@@ -1,16 +1,19 @@
 #include "game.h"
 
 int game_spawn(game_state *game, game_task *task) {
-	game_task *prev = game->tasks.;
+	game_task *prev = game->tasks.next;
 	for (game_task *candidate = game->tasks.next; candidate != &game->tasks; candidate = candidate->next) {
 		if (candidate->z > task->z) break;
 		prev = candidate;	
 	}
 
-	/* im too tired to do the rest for now */
+	task->next = prev->next;
+	prev->next = task;
+
+	task->prev = prev;
+	task->next->prev = task;
 
 	task->game = game;
-
 	return task->on_spawn(task);
 }
 
