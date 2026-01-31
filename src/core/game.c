@@ -1,8 +1,9 @@
 #include "game.h"
 
-int game_spawn(game_state *game, game_task *task) {
-	game_task *prev = game->tasks.next;
-	for (game_task *candidate = game->tasks.next; candidate != &game->tasks; candidate = candidate->next) {
+void game_link(game_task *task) {
+	game_state *game = task->game;
+	game_task *prev = game->tasks.first;
+	for (game_task *candidate = game->tasks.first; candidate != NULL; candidate = candidate->next) {
 		if (candidate->z > task->z) break;
 		prev = candidate;	
 	}
@@ -12,22 +13,26 @@ int game_spawn(game_state *game, game_task *task) {
 
 	task->prev = prev;
 	task->next->prev = task;
+}
 
+void game_unlink(game_task *task) {
+	task->next->prev = task->prev;
+	task->prev->next = task->next;
+}
+
+int game_spawn(game_state *game, game_task *task) {
 	task->game = game;
+	game_link(task);
 	return task->on_spawn(task);
 }
 
 void game_kill(game_task *task) {
-	task->game->tasks.prev = task->prev;
-	task->game->tasks.next = task->next;
-
+	game_unlink(task);
 	task->free(task);
 }
 
 void game_init(game_state *game) {
 	memset(game, 0, sizeof(*game));
-	game->tasks.prev = &game->tasks;
-	game->tasks.next = &game->tasks;
 }
 
 void game_nop(game_task *self) {
@@ -65,7 +70,7 @@ int game_switch_event(game_task *task, uint32_t event_type, void (*handler)(game
 }
 
 void game_event(game_state *game) {
-	for (game_task *task = game->tasks.next; task != &game->tasks; task = task->next) {
+	for (game_task *task = game->tasks.first; task != NULL; task = task->next) {
 		task->on_event(task);
 	}
 }
@@ -74,7 +79,7 @@ void game_tick(game_state *game) {
 	int ticks = SDL_GetTicks();
 	game->delta = ticks - game->ticks;
 	game->ticks = ticks;
-	for (game_task *task = game->tasks.next; task != &game->tasks; task = task->next) {
+	for (game_task *task = game->tasks.first; task != NULL; task = task->next) {
 		task->on_tick(task);
 	}
 	SDL_RenderPresent(game->renderer);
