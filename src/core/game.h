@@ -35,10 +35,7 @@ typedef struct game_task {
 
 typedef struct game_state {
 	bool aborted;
-	struct {
-		game_task *first;
-		game_task *last;
-	} tasks;
+        struct game_task tasks;
 	SDL_Event event;
 	int ticks;
 	int delta;
@@ -48,8 +45,6 @@ typedef struct game_state {
 	SDL_Renderer *renderer;
 } game_state;
 
-void game_link(game_task *task);
-void game_unlink(game_task *task);
 int game_spawn(game_state *game, game_task *task);
 void game_kill(game_task *task);
 void game_init(game_state *game);
