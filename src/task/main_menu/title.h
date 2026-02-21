@@ -1,2 +1,2 @@
 #include "../../core/game.h"
-game_task *title();
+int title(game_task *self);

@@ -1,18 +1,12 @@
 #include "game_mgr.h"
 
-static int handle_spawn(game_task *self);
 static void handle_tick(game_task *self);
 static void handle_event(game_task *self);
 
-game_task *game_mgr() {
-	game_task *task = game_new_task();
-	task->on_spawn = handle_spawn;
-	task->on_tick = handle_tick;
-	task->on_event = handle_event;
-	return task;
-}
+int game_mgr(game_task *self) {
+	self->on_tick = handle_tick;
+	self->on_event = handle_event;
 
-static int handle_spawn(game_task *self) {
 	/* become the game manager */
 	self->game->mgr = self;
 

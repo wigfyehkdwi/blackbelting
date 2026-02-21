@@ -1,5 +1,9 @@
 #include "game.h"
 
+static game_task *game_new_task();
+static void game_nop(game_task *self);
+static int game_nopi(game_task *self);
+
 void game_link(game_task *task) {
 	game_state *game = task->game;
 	game_task *prev = game->tasks.next;
@@ -26,23 +30,29 @@ void game_shift(game_task *task, int z) {
 	game_link(task);
 }
 
-int game_spawn(game_state *game, game_task *task) {
-	task->game = game;
+int game_spawn(game_task *parent, int (*on_spawn)(game_task *self)) {
+	game_task *task = game_new_task();
+	task->parent = parent;
+	task->game = parent->game;
 	game_link(task);
-	return task->on_spawn(task);
+	return on_spawn(task);
 }
 
 void game_kill(game_task *task) {
 	game_unlink(task);
 	task->free(task);
+	free(task);
 }
 
-void game_killall(game_state *game) {
+void game_killall(game_task *root) {
+	game_state *game = root->game;
+
+	/* recursively kill children */
 	for (game_task *task = game->tasks.next; task != &game->tasks; task = task->next) {
-		task->free(task);
+		if (task->parent == root) game_killall(task);
 	}
-	game->tasks.prev = &game->tasks;
-	game->tasks.next = &game->tasks;
+	/* avoid messing with our linked list, and do it! */
+	if (root != &game->tasks) game_kill(root);
 }
 
 void game_init(game_state *game) {
@@ -51,25 +61,20 @@ void game_init(game_state *game) {
 	game->tasks.next = &game->tasks;
 }
 
-void game_nop(game_task *self) {
+static void game_nop(game_task *self) {
 }
-int game_nopi(game_task *self) {
+static int game_nopi(game_task *self) {
 	return 0;
 }
 
-static void game_default_free(game_task *self);
-static void game_default_free(game_task *self) {
-	free(self);
-}
 
-game_task *game_new_task() {
+static game_task *game_new_task() {
 	game_task *task = calloc(sizeof(game_task), 1);
 	if (task == NULL) return NULL;
 
-	task->on_spawn = game_nopi;
 	task->on_event = game_nop;
 	task->on_tick = game_nop;
-	task->free = game_default_free;
+	task->free = game_nop;
 	return task;
 }
 

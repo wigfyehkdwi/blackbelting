@@ -1,19 +1,11 @@
 #include "title.h"
-
 #include <SDL3_image/SDL_image.h>
-static int load_resources(game_task *self);
+
 static void handle_tick(game_task *self);
 
-game_task *title() {
-	game_task *task = game_new_task();
-	if (task == NULL) return NULL;
+int title(game_task *self) {
+	self->on_tick = handle_tick;
 
-	task->on_spawn = load_resources;
-	task->on_tick = handle_tick;
-	return task;
-}
-
-static int load_resources(game_task *self) {
 	self->sprite = game_new_sprite();
 	if (self->sprite == NULL) return -1;
 

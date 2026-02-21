@@ -1,2 +1,2 @@
 #include "../../core/game.h"
-game_task *play_button();
+int play_button(game_task *task);

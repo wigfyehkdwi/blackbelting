@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	/* spawn the main menu */
-	if (game_spawn(&game, main_menu())) {
+	if (game_spawn(&game.tasks, main_menu)) {
 		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "Failed to spawn main menu!");
 	}
 

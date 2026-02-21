@@ -1,22 +1,14 @@
 #include "play_button.h"
 #include "../game/game_mgr.h"
-
 #include <SDL3_image/SDL_image.h>
-static int load_resources(game_task *self);
+
 static void handle_tick(game_task *self);
 static void handle_event(game_task *self);
 
-game_task *play_button() {
-	game_task *task = game_new_task();
-	if (task == NULL) return NULL;
+int play_button(game_task *self) {
+	self->on_tick = handle_tick;
+	self->on_event = handle_event;
 
-	task->on_spawn = load_resources;
-	task->on_tick = handle_tick;
-	task->on_event = handle_event;
-	return task;
-}
-
-static int load_resources(game_task *self) {
 	self->sprite = game_new_sprite();
 	if (self->sprite == NULL) return -1;
 
@@ -35,7 +27,7 @@ static void handle_tick(game_task *self) {
 
 static void handle_event(game_task *self) {
 	if (game_is_clicked(self) == 2) {
-		game_killall(self->game);
-		game_spawn(self->game, game_mgr());
+		game_killall(self);
+		game_spawn(self, game_mgr);
 	}
 }

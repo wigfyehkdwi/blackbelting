@@ -1,2 +1,2 @@
 #include "../../core/game.h"
-game_task *game_mgr();
+int game_mgr(game_task *self);
