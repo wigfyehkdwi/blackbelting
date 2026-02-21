@@ -1,8 +1,9 @@
 #include "game.h"
 
-int game_spawn(game_state *game, game_task *task) {
+void game_link(game_task *task) {
+	game_state *game = task->game;
 	game_task *prev = game->tasks.next;
-	for (game_task *candidate = game->tasks.next; candidate != &game->tasks; candidate = candidate->next) {
+	for (game_task *candidate = prev; candidate != &game->tasks; candidate = candidate->next) {
 		if (candidate->z > task->z) break;
 		prev = candidate;	
 	}
@@ -12,16 +13,36 @@ int game_spawn(game_state *game, game_task *task) {
 
 	task->prev = prev;
 	task->next->prev = task;
+}
 
+void game_unlink(game_task *task) {
+	task->next->prev = task->prev;
+	task->prev->next = task->next;
+}
+
+void game_shift(game_task *task, int z) {
+	task->z = z;
+	game_unlink(task);
+	game_link(task);
+}
+
+int game_spawn(game_state *game, game_task *task) {
 	task->game = game;
+	game_link(task);
 	return task->on_spawn(task);
 }
 
 void game_kill(game_task *task) {
-	task->game->tasks.prev = task->prev;
-	task->game->tasks.next = task->next;
-
+	game_unlink(task);
 	task->free(task);
+}
+
+void game_killall(game_state *game) {
+	for (game_task *task = game->tasks.next; task != &game->tasks; task = task->next) {
+		task->free(task);
+	}
+	game->tasks.prev = &game->tasks;
+	game->tasks.next = &game->tasks;
 }
 
 void game_init(game_state *game) {

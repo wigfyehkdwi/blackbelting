@@ -34,19 +34,24 @@ typedef struct game_task {
 } game_task;
 
 typedef struct game_state {
-	bool aborted;
+	bool exit;
         struct game_task tasks;
 	SDL_Event event;
 	int ticks;
 	int delta;
 	game_camera camera;
+	game_task *mgr;
 
 	SDL_Window *window;
 	SDL_Renderer *renderer;
 } game_state;
 
+void game_link(game_task *task);
+void game_unlink(game_task *task);
+void game_shift(game_task *task, int z);
 int game_spawn(game_state *game, game_task *task);
 void game_kill(game_task *task);
+void game_killall(game_state *game);
 void game_init(game_state *game);
 game_task *game_new_task();
 game_sprite *game_new_sprite();

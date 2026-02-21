@@ -1,11 +1,12 @@
-#include "../core/game.h"
+#include "play_button.h"
+#include "../game/game_mgr.h"
 
 #include <SDL3_image/SDL_image.h>
 static int load_resources(game_task *self);
 static void handle_tick(game_task *self);
 static void handle_event(game_task *self);
 
-game_task *sprite_test() {
+game_task *play_button() {
 	game_task *task = game_new_task();
 	if (task == NULL) return NULL;
 
@@ -19,28 +20,22 @@ static int load_resources(game_task *self) {
 	self->sprite = game_new_sprite();
 	if (self->sprite == NULL) return -1;
 
-	self->sprite->texture = IMG_LoadTexture(self->game->renderer, "res/test.png");
+	self->sprite->texture = IMG_LoadTexture(self->game->renderer, "res/main_menu/play.png");
 	if (self->sprite->texture == NULL) return -1;
 
 	self->sprite->x = 300;
 	self->sprite->y = 300;
-	/* self->sprite->ui = true; */
+	self->sprite->ui = true;
 	return 0;
 }
 
 static void handle_tick(game_task *self) {
-	SDL_SetRenderDrawColor(self->game->renderer, 0, 0, 0, 255);
-	SDL_RenderClear(self->game->renderer);
-
 	game_draw(self);
-
-	SDL_SetRenderDrawColor(self->game->renderer, 0, 255, 255, 255);
-	SDL_RenderDebugText(self->game->renderer, 100 - self->game->camera.x, 100 - self->game->camera.y, "hello world!");
 }
 
 static void handle_event(game_task *self) {
 	if (game_is_clicked(self) == 2) {
-		self->game->camera.x = SDL_rand(300);
-		self->game->camera.y = SDL_rand(300);
+		game_killall(self->game);
+		game_spawn(self->game, game_mgr());
 	}
 }

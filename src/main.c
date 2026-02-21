@@ -1,6 +1,5 @@
 #include "core/game.h"
-#include "task/quit_handler.h"
-#include "task/sprite_test.h"
+#include "task/main_menu/main_menu.h"
 
 int main(int argc, char *argv[]) {
 	if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
@@ -25,11 +24,12 @@ int main(int argc, char *argv[]) {
 		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "Failed to get renderer: %s", SDL_GetError());
 	}
 
-	/* test code */
-	game_spawn(&game, quit_handler());
-	game_spawn(&game, sprite_test());
+	/* spawn the main menu */
+	if (game_spawn(&game, main_menu())) {
+		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "Failed to spawn main menu!");
+	}
 
-	while (!game.aborted) {
+	while (!game.exit) {
 		while (SDL_PollEvent(&game.event)) {
 			game_event(&game);
 		}
