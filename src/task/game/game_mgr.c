@@ -18,7 +18,7 @@ int game_mgr(game_task *self) {
 }
 
 static void handle_tick(game_task *self) {
-	SDL_SetRenderDrawColor(self->game->renderer, 0, 255, 255, 255);
+	SDL_SetRenderDrawColor(self->game->renderer, 0, 12, 214, 255);
 	SDL_RenderClear(self->game->renderer);
 }
 

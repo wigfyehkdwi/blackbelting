@@ -92,7 +92,7 @@ int game_switch_event(game_task *task, uint32_t event_type, void (*handler)(game
 
 void game_event(game_state *game) {
 	for (game_task *task = game->tasks.next; task != &game->tasks; task = task->next) {
-		printf("handling event for task %p\n", task);
+		/*printf("handling event for task %p\n", task);*/
 		task->on_event(task);
 	}
 }
@@ -102,7 +102,7 @@ void game_tick(game_state *game) {
 	game->delta = ticks - game->ticks;
 	game->ticks = ticks;
 	for (game_task *task = game->tasks.next; task != &game->tasks; task = task->next) {
-		printf("ticking task %p\n", task);
+		/*printf("ticking task %p\n", task);*/
 		task->on_tick(task);
 	}
 	SDL_RenderPresent(game->renderer);
