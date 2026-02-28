@@ -1,10 +1,11 @@
 #include "game.h"
+#include <stdio.h>
 
 static game_task *game_new_task();
 static void game_nop(game_task *self);
-static int game_nopi(game_task *self);
 
 void game_link(game_task *task) {
+	printf("linking task %p\n", task);
 	game_state *game = task->game;
 	game_task *prev = game->tasks.next;
 	for (game_task *candidate = prev; candidate != &game->tasks; candidate = candidate->next) {
@@ -17,6 +18,7 @@ void game_link(game_task *task) {
 
 	task->prev = prev;
 	task->next->prev = task;
+	printf("done linking!\n");
 }
 
 void game_unlink(game_task *task) {
@@ -31,6 +33,7 @@ void game_shift(game_task *task, int z) {
 }
 
 int game_spawn(game_task *parent, int (*on_spawn)(game_task *self)) {
+	printf("spawning task...\n");
 	game_task *task = game_new_task();
 	task->parent = parent;
 	task->game = parent->game;
@@ -59,14 +62,11 @@ void game_init(game_state *game) {
 	memset(game, 0, sizeof(*game));
 	game->tasks.prev = &game->tasks;
 	game->tasks.next = &game->tasks;
+	game->tasks.game = game;
 }
 
 static void game_nop(game_task *self) {
 }
-static int game_nopi(game_task *self) {
-	return 0;
-}
-
 
 static game_task *game_new_task() {
 	game_task *task = calloc(sizeof(game_task), 1);
@@ -92,6 +92,7 @@ int game_switch_event(game_task *task, uint32_t event_type, void (*handler)(game
 
 void game_event(game_state *game) {
 	for (game_task *task = game->tasks.next; task != &game->tasks; task = task->next) {
+		printf("handling event for task %p\n", task);
 		task->on_event(task);
 	}
 }
@@ -101,6 +102,7 @@ void game_tick(game_state *game) {
 	game->delta = ticks - game->ticks;
 	game->ticks = ticks;
 	for (game_task *task = game->tasks.next; task != &game->tasks; task = task->next) {
+		printf("ticking task %p\n", task);
 		task->on_tick(task);
 	}
 	SDL_RenderPresent(game->renderer);
