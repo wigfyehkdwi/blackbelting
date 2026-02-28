@@ -13,7 +13,7 @@ I was asked to document the game engine so here it is. Basically the game (you j
 
 Milestones:
 * ~~Write a quit handler task to test the task system~~
-* Render a sprite to the screen and have it move around
-* Make some basic menus with clickable buttons
-* Create the squirrel, trees, other characters, dialog between them...
+* ~~Render a sprite to the screen and have it move around~~
+* ~~Make some basic menus with clickable buttons~~
+* Create the squirrel, trees, other characters, dialogue between them...
 * Now... try to make a playable game?
