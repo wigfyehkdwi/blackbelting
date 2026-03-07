@@ -8,7 +8,7 @@ int game_mgr(game_task *self) {
 	self->on_event = handle_event;
 
 	/* become the game manager */
-	self->game->mgr = self;
+	self->game->manager = self;
 
 	/* spawn sub-tasks */
 	/*if (game_spawn(self->game, title())) return 1;

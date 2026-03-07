@@ -39,8 +39,10 @@ typedef struct game_state {
 	SDL_Event event;
 	int ticks;
 	int delta;
+
+	/* services */
 	game_camera camera;
-	game_task *mgr;
+	game_task *manager;
 
 	SDL_Window *window;
 	SDL_Renderer *renderer;
@@ -59,5 +61,5 @@ void game_free(game_task *task);
 void game_event(game_state *game);
 void game_tick(game_state *game);
 int game_draw(game_task *task);
-bool game_is_touching(game_sprite *sprite, int x, int y);
+bool game_is_touching_pos(game_sprite *sprite, int x, int y);
 int game_is_clicked(game_task *task);

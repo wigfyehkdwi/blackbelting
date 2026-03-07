@@ -127,7 +127,7 @@ int game_draw(game_task *task) {
 	return SDL_RenderTexture(game->renderer, texture, NULL, &rect);
 }
 
-bool game_is_touching(game_sprite *sprite, int x, int y) {
+bool game_is_touching_pos(game_sprite *sprite, int x, int y) {
 	if (x < sprite->x || x > (sprite->x + sprite->texture->w)) return false;
 	if (y < sprite->y || y > (sprite->y + sprite->texture->h)) return false;
 	return true;
@@ -152,5 +152,5 @@ int game_is_clicked(game_task *task) {
 		my += task->game->camera.y;
 	}
 
-	return game_is_touching(sprite, mx, my) ? result : 0;
+	return game_is_touching_pos(sprite, mx, my) ? result : 0;
 }
