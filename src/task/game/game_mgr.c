@@ -7,6 +7,8 @@ int game_mgr(game_task *self) {
 	self->on_tick = handle_tick;
 	self->on_event = handle_event;
 
+	self->data = calloc(sizeof(game_services), 1);
+
 	/* become the game manager */
 	self->game->manager = self;
 

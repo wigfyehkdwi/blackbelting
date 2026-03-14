@@ -3,6 +3,6 @@
 
 int game_mgr(game_task *self);
 
-struct game_services {
-	key_mappings *keymap;
-}
+typedef struct {
+	key_mappings *keys;
+} game_services;
