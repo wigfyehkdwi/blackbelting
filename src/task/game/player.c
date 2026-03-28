@@ -36,8 +36,11 @@ static void handle_tick(game_task *self) {
 	if (data->right) self->sprite->x += self->game->delta;
 
 	/* move the camera */
-	self->game->camera.x = SDL_clamp(self->game->camera.x, self->sprite->x - 100, self->sprite->x + 100);
-	self->game->camera.y = SDL_clamp(self->game->camera.y, self->sprite->y - 100, self->sprite->y + 100);
+	int win_w = 0;
+	int win_h = 0;
+	SDL_GetWindowSize(self->game->window, &win_w, &win_h);
+	self->game->camera.x = SDL_clamp(self->game->camera.x + win_w/2, self->sprite->x - 100, self->sprite->x + 100) - win_w/2;
+	self->game->camera.y = SDL_clamp(self->game->camera.y + win_h/2, self->sprite->y - 100, self->sprite->y + 100) - win_h/2;
 
 	game_draw(self);
 }
