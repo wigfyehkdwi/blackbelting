@@ -27,6 +27,7 @@ int player(game_task *self) {
 }
 
 static void handle_tick(game_task *self) {
+	self->z = -69;
 	player_data *data = self->data;
 
 	/* movement (very basic for now) */
