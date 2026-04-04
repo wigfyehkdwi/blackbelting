@@ -1,5 +1,7 @@
 #include "game_mgr.h"
 #include "player.h"
+#include "enemy.h"
+#include "axolotl.h"
 
 static void handle_tick(game_task *self);
 static void handle_event(game_task *self);
@@ -22,6 +24,8 @@ int game_mgr(game_task *self) {
 
 	/* spawn sub-tasks */
 	if (game_spawn(self, player)) return 1;
+	if (game_spawn(self, enemy)) return 1;
+	if (game_spawn(self, axolotl)) return 1;
 
 	return 0;
 }
