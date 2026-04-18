@@ -154,3 +154,21 @@ int game_is_clicked(game_task *task) {
 
 	return game_is_touching_pos(sprite, mx, my) ? result : 0;
 }
+
+bool game_is_touching_sprite(game_task *task, game_sprite *target) {
+	game_sprite *sprite = task->sprite;
+	tx = target->x;
+	ty = target->y;
+
+	if (target->ui != sprite->ui) {
+		if (target->ui) {
+			tx -= task->game->camera.x;
+			ty -= task->game->camera.y;
+		} else {
+			tx += task->game->camera.x;
+			ty += task->game->camera.y;
+		}
+	}
+
+	return game_is_touching(sprite, tx, ty);
+}
