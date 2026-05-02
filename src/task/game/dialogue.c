@@ -16,8 +16,12 @@ int dialogue(game_task *self) {
 	self->on_tick = handle_tick;
 	self->sprite = calloc(sizeof(game_sprite), 1);
 	self->sprite->x = 69;
-	self->sprite->texture = IMG_LoadTexture(self->game->renderer, "res/game/dialogue.jpg");
+	self->sprite->texture = IMG_LoadTexture(self->game->renderer, "res/game/dialogue.png");
 	if (self->sprite->texture == NULL) return -1;
+
+        game_task *mgr = self->game->manager;
+        game_services *svc = mgr->data;
+        svc->dialogue = self;
 
 	return 0;
 }

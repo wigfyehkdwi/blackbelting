@@ -1,5 +1,6 @@
 #include "axolotl.h"
 #include "game_mgr.h"
+#include "dialogue.h"
 #include <SDL3_image/SDL_image.h>
 
 typedef struct {
@@ -25,9 +26,9 @@ int axolotl(game_task *self) {
 static void handle_tick(game_task *self) {
 	game_draw(self);
 
-	game_task mgr = self->game->manager;
-	game_services svc = mgr->data;
-	if (game_is_touching_sprite(self, svc->player->sprite)) {
+	game_task *mgr = self->game->manager;
+	game_services *svc = mgr->data;
+	if (svc->dialogue == NULL && game_is_touching_sprite(self, svc->player->sprite)) {
 		game_spawn(mgr, dialogue);
 	}
 }
