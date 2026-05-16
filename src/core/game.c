@@ -116,8 +116,8 @@ int game_draw(game_task *task) {
 	SDL_FRect rect;
 	rect.x = sprite->x;
 	rect.y = sprite->y;
-	rect.w = texture->w;
-	rect.h = texture->h;
+	rect.w = sprite->w;
+	rect.h = sprite->h;
 
 	if (!sprite->ui) {
 		rect.x -= game->camera.x;
@@ -128,8 +128,8 @@ int game_draw(game_task *task) {
 }
 
 bool game_is_touching_pos(game_sprite *sprite, int x, int y) {
-	if (x < sprite->x || x > (sprite->x + sprite->texture->w)) return false;
-	if (y < sprite->y || y > (sprite->y + sprite->texture->h)) return false;
+	if (x < sprite->x || x > (sprite->x + sprite->w)) return false;
+	if (y < sprite->y || y > (sprite->y + sprite->h)) return false;
 	return true;
 }
 
@@ -171,4 +171,9 @@ bool game_is_touching_sprite(game_task *task, game_sprite *target) {
 	}
 
 	return game_is_touching_pos(sprite, tx, ty);
+}
+
+void game_scale_sprite(game_sprite *sprite, int mul) {
+	sprite->w = sprite->texture->w * mul;
+	sprite->h = sprite->texture->h * mul;
 }

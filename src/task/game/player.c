@@ -22,6 +22,7 @@ int player(game_task *self) {
 	self->sprite = calloc(sizeof(game_sprite), 1);
 	self->sprite->texture = IMG_LoadTexture(self->game->renderer, "res/game/player.png");
 	if (self->sprite->texture == NULL) return -1;
+	game_scale_sprite(self->sprite, 1);
 
 	game_task *mgr = self->game->manager;
 	game_services *svc = mgr->data;

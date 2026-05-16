@@ -19,6 +19,7 @@ int axolotl(game_task *self) {
 	self->sprite->x = 69;
 	self->sprite->texture = IMG_LoadTexture(self->game->renderer, "res/game/axolotl.jpg");
 	if (self->sprite->texture == NULL) return -1;
+	game_scale_sprite(self->sprite, 1);
 
 	return 0;
 }

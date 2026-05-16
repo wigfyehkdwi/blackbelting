@@ -17,6 +17,7 @@ int enemy(game_task *self) {
 	self->sprite = calloc(sizeof(game_sprite), 1);
 	self->sprite->texture = IMG_LoadTexture(self->game->renderer, "res/game/enemy.png");
 	if (self->sprite->texture == NULL) return -1;
+	game_scale_sprite(self->sprite, 1);
 
 	return 0;
 }

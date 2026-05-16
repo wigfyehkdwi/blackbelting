@@ -15,9 +15,10 @@ static void handle_tick(game_task *self);
 int dialogue(game_task *self) {
 	self->on_tick = handle_tick;
 	self->sprite = calloc(sizeof(game_sprite), 1);
-	self->sprite->x = 69;
+	self->sprite->ui = true;
 	self->sprite->texture = IMG_LoadTexture(self->game->renderer, "res/game/dialogue.png");
 	if (self->sprite->texture == NULL) return -1;
+	game_scale_sprite(self->sprite, 3);
 
         game_task *mgr = self->game->manager;
         game_services *svc = mgr->data;

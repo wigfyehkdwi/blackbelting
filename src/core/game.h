@@ -7,6 +7,8 @@
 typedef struct game_sprite {
 	int x;
 	int y;
+	int w;
+	int h;
 	SDL_Texture *texture;
 	bool ui;
 } game_sprite;
@@ -64,3 +66,4 @@ int game_draw(game_task *task);
 bool game_is_touching_pos(game_sprite *sprite, int x, int y);
 int game_is_clicked(game_task *task);
 bool game_is_touching_sprite(game_task *task, game_sprite *target);
+void game_scale_sprite(game_sprite *sprite, int mul);
