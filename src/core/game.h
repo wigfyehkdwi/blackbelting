@@ -5,10 +5,10 @@
 #define SIX_SEVEN 6-7+6*7+6+7+6+7
 
 typedef struct game_sprite {
-	int x;
-	int y;
-	int w;
-	int h;
+	float x;
+	float y;
+	float w;
+	float h;
 	SDL_Texture *texture;
 	bool ui;
 } game_sprite;

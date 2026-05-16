@@ -173,7 +173,7 @@ bool game_is_touching_sprite(game_task *task, game_sprite *target) {
 	return game_is_touching_pos(sprite, tx, ty);
 }
 
-void game_scale_sprite(game_sprite *sprite, int mul) {
+void game_scale_sprite(game_sprite *sprite, float mul) {
 	sprite->w = sprite->texture->w * mul;
 	sprite->h = sprite->texture->h * mul;
 }
