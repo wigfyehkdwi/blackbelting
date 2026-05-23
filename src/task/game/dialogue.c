@@ -14,11 +14,6 @@ static void handle_tick(game_task *self);
 
 int dialogue(game_task *self) {
 	self->on_tick = handle_tick;
-	self->sprite = calloc(sizeof(game_sprite), 1);
-	self->sprite->ui = true;
-	self->sprite->texture = IMG_LoadTexture(self->game->renderer, "res/game/dialogue.png");
-	if (self->sprite->texture == NULL) return -1;
-	game_scale_sprite(self->sprite, 3);
 
         game_task *mgr = self->game->manager;
         game_services *svc = mgr->data;
@@ -28,5 +23,7 @@ int dialogue(game_task *self) {
 }
 
 static void handle_tick(game_task *self) {
-	game_draw(self);
+	SDL_FRect rect = {.x = 0, .y = 480 - 100, .w = 640, .h = 100}; /* TODO: Unhardcode */
+	SDL_SetRenderDrawColor(self->game->renderer, 0, 0, 17, 255);
+	SDL_RenderFillRect(self->game->renderer, &rect);
 }
