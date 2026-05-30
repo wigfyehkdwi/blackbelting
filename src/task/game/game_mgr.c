@@ -17,6 +17,8 @@ int game_mgr(game_task *self) {
 	svc->keys.down = SDLK_DOWN;
 	svc->keys.left = SDLK_LEFT;
 	svc->keys.right = SDLK_RIGHT;
+	svc->keys.interact = SDLK_SPACE;
+	svc->keys.proceed = SDLK_RETURN;
 
 	/* become the game manager */
 	self->game->manager = self;

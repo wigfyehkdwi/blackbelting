@@ -10,6 +10,7 @@ typedef struct {
 
         /* actions */
         Uint32 interact;
+	Uint32 proceed;
 
         /* misc */
         Uint32 pause;
