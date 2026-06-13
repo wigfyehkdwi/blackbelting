@@ -36,10 +36,10 @@ static void handle_tick(game_task *self) {
 	player_data *data = self->data;
 
 	/* movement (very basic for now) */
-	if (data->up) self->sprite->y -= self->game->delta;
-	if (data->down) self->sprite->y += self->game->delta;
-	if (data->left) self->sprite->x -= self->game->delta;
-	if (data->right) self->sprite->x += self->game->delta;
+	if (data->up) self->sprite->y -= self->game->delta*0.63;
+	if (data->down) self->sprite->y += self->game->delta*0.63;
+	if (data->left) self->sprite->x -= self->game->delta*0.63;
+	if (data->right) self->sprite->x += self->game->delta*0.63;
 
 	/* move the camera */
 	int win_w = 0;
