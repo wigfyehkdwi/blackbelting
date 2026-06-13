@@ -2,17 +2,20 @@
 #include "game_mgr.h"
 #include <SDL3_image/SDL_image.h>
 
+enum enemy_phase {
+	IDLE,
+	DIALOGUE,
+	FIGHT,
+	DEAD
+};
+
 typedef struct {
-	/* key states */
-	bool up;
-	bool down;
-	bool left;
-	bool right;
+	int phase;
 } enemy_data;
 
 static void handle_tick(game_task *self);
 
-int enemy(game_task *self) {
+game_task *enemy() {
 	self->on_tick = handle_tick;
 	self->sprite = calloc(sizeof(game_sprite), 1);
 	self->sprite->texture = IMG_LoadTexture(self->game->renderer, "res/game/enemy.png");

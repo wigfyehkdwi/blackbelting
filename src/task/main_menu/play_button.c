@@ -5,7 +5,7 @@
 static void handle_tick(game_task *self);
 static void handle_event(game_task *self);
 
-int play_button(game_task *self) {
+game_task *play_button() {
 	self->on_tick = handle_tick;
 	self->on_event = handle_event;
 

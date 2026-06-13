@@ -3,7 +3,7 @@
 
 static void handle_tick(game_task *self);
 
-int title(game_task *self) {
+game_task *title() {
 	self->on_tick = handle_tick;
 
 	self->sprite = game_new_sprite();

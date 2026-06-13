@@ -1,7 +1,7 @@
 #include "../../core/game.h"
 #include "keymap.h"
 
-int game_mgr(game_task *self);
+game_task *game_mgr();
 
 typedef struct {
 	key_mappings keys;

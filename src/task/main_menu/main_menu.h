@@ -1,2 +1,2 @@
 #include "../../core/game.h"
-int main_menu(game_task *self);
+game_task *main_menu();

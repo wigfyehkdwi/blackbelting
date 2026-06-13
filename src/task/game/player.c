@@ -14,7 +14,7 @@ static void handle_tick(game_task *self);
 static void handle_event(game_task *self);
 static void handle_key(player_data *data, key_mappings *keys, Uint32 key, bool state);
 
-int player(game_task *self) {
+game_task *player() {
 	self->on_tick = handle_tick;
 	self->on_event = handle_event;
 	self->data = calloc(sizeof(player_data), 1);

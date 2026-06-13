@@ -18,7 +18,7 @@ static char *placeholder_text[] = {
 	"this is a test of the dialogue system!"
 };
 
-int dialogue(game_task *self) {
+game_task *dialogue() {
 	self->on_tick = handle_tick;
 	self->on_event = handle_event;
 
