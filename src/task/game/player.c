@@ -36,10 +36,10 @@ static void handle_tick(game_task *self) {
 	player_data *data = self->data;
 
 	/* movement (very basic for now) */
-	if (data->up) self->sprite->y -= self->game->delta*0.63;
-	if (data->down) self->sprite->y += self->game->delta*0.63;
-	if (data->left) self->sprite->x -= self->game->delta*0.63;
-	if (data->right) self->sprite->x += self->game->delta*0.63;
+	if (svc->keys.up.down) self->sprite->y -= self->game->delta*0.63;
+	if (svc->keys.down.down) self->sprite->y += self->game->delta*0.63;
+	if (svc->keys.left.down) self->sprite->x -= self->game->delta*0.63;
+	if (svc->keys.right.down) self->sprite->x += self->game->delta*0.63;
 
 	/* move the camera */
 	int win_w = 0;
@@ -49,17 +49,4 @@ static void handle_tick(game_task *self) {
 	self->game->camera.y = SDL_clamp(self->game->camera.y + win_h/2, self->sprite->y - 100, self->sprite->y + 100) - win_h/2;
 
 	game_draw(self);
-}
-
-static void handle_event(game_task *self) {
-	game_services *svc = self->game->manager->data;
-	if (self->game->event.type == SDL_EVENT_KEY_DOWN) handle_key(self->data, &svc->keys, ((SDL_KeyboardEvent *)&self->game->event)->key, true);
-	else if (self->game->event.type == SDL_EVENT_KEY_UP) handle_key(self->data, &svc->keys, ((SDL_KeyboardEvent *)&self->game->event)->key, false);
-}
-
-static void handle_key(player_data *data, key_mappings *keys, Uint32 key, bool state) {
-	if (key == keys->up) data->up = state;
-	else if (key == keys->down) data->down = state;
-	else if (key == keys->left) data->left = state;
-	else if (key == keys->right) data->right = state;
 }

@@ -2,16 +2,21 @@
 int keymap(game_task *self);
 
 typedef struct {
+	Uint32 code;
+	bool down;
+} key_state;
+
+typedef struct {
         /* movement */
-        Uint32 up;
-        Uint32 down;
-        Uint32 left;
-        Uint32 right;
+        key_state up;
+        key_state down;
+        key_state left;
+        key_state right;
 
         /* actions */
-        Uint32 interact;
-	Uint32 proceed;
+        key_state interact;
+	key_state proceed;
 
         /* misc */
-        Uint32 pause;
-} key_mappings;
+        key_state pause;
+} game_keys;
