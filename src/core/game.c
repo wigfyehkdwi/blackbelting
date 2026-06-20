@@ -1,8 +1,8 @@
 #include "game.h"
 #include <stdio.h>
 
-static game_task *game_new_task();
 static void game_nop(game_task *self);
+static int game_inop(game_task *self);
 
 void game_link(game_task *task) {
 	printf("linking task %p\n", task);
@@ -32,13 +32,13 @@ void game_shift(game_task *task, int z) {
 	game_link(task);
 }
 
-int game_spawn(game_task *parent, int (*on_spawn)(game_task *self)) {
+int game_spawn(game_task *parent, game_task *task) {
 	printf("spawning task...\n");
-	game_task *task = game_new_task();
+	if (task == NULL) return -127;
 	task->parent = parent;
 	task->game = parent->game;
 	game_link(task);
-	return on_spawn(task);
+	return task->on_spawn(task);
 }
 
 void game_kill(game_task *task) {
@@ -65,20 +65,21 @@ void game_init(game_state *game) {
 	game->tasks.game = game;
 }
 
-static void game_nop(game_task *self) {
-}
+static void game_nop(game_task *self) {}
+static int game_inop(game_task *self) { return 0; }
 
-static game_task *game_new_task() {
+game_task *new_game_task() {
 	game_task *task = calloc(sizeof(game_task), 1);
 	if (task == NULL) return NULL;
 
+	task->on_spawn = game_inop;
 	task->on_event = game_nop;
 	task->on_tick = game_nop;
 	task->free = game_nop;
 	return task;
 }
 
-game_sprite *game_new_sprite() {
+game_sprite *new_game_sprite() {
 	game_sprite *sprite = calloc(sizeof(game_sprite), 1);
 	return sprite;
 }

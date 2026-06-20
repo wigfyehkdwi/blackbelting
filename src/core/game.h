@@ -21,6 +21,7 @@ typedef struct game_camera {
 typedef struct game_task {
 	int z;
 
+	int (*on_spawn)(struct game_task *);
 	void (*on_event)(struct game_task *);
 	void (*on_tick)(struct game_task *);
 	void (*free)(struct game_task *);
@@ -53,11 +54,12 @@ typedef struct game_state {
 void game_link(game_task *task);
 void game_unlink(game_task *task);
 void game_shift(game_task *task, int z);
-int game_spawn(game_task *parent, int (*on_spawn)(game_task *self));
+game_task *new_game_task();
+int game_spawn(game_task *parent, game_task *task);
 void game_kill(game_task *task);
 void game_killall(game_task *root);
 void game_init(game_state *game);
-game_sprite *game_new_sprite();
+game_sprite *new_game_sprite();
 int game_switch_event(game_task *task, uint32_t event_type, void (*handler)(game_task *));
 void game_free(game_task *task);
 void game_event(game_state *game);

@@ -19,6 +19,7 @@ static char *placeholder_text[] = {
 };
 
 game_task *dialogue() {
+	game_task *self = new_game_task();
 	self->on_tick = handle_tick;
 	self->on_event = handle_event;
 
@@ -32,7 +33,7 @@ game_task *dialogue() {
 	state->text = placeholder_text;
 	self->data = state;
 
-	return 0;
+	return self;
 }
 
 static void handle_tick(game_task *self) {

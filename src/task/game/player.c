@@ -15,13 +15,14 @@ static void handle_event(game_task *self);
 static void handle_key(player_data *data, key_mappings *keys, Uint32 key, bool state);
 
 game_task *player() {
+	game_task *self = new_game_task();
 	self->on_tick = handle_tick;
 	self->on_event = handle_event;
 	self->data = calloc(sizeof(player_data), 1);
 
 	self->sprite = calloc(sizeof(game_sprite), 1);
 	self->sprite->texture = IMG_LoadTexture(self->game->renderer, "res/game/player.png");
-	if (self->sprite->texture == NULL) return -1;
+	if (self->sprite->texture == NULL) return NULL;
 	game_scale_sprite(self->sprite, 1);
 
 	game_task *mgr = self->game->manager;

@@ -16,13 +16,14 @@ typedef struct {
 static void handle_tick(game_task *self);
 
 game_task *enemy() {
+	game_task *self = new_game_task();
 	self->on_tick = handle_tick;
 	self->sprite = calloc(sizeof(game_sprite), 1);
 	self->sprite->texture = IMG_LoadTexture(self->game->renderer, "res/game/enemy.png");
-	if (self->sprite->texture == NULL) return -1;
+	if (self->sprite->texture == NULL) return NULL;
 	game_scale_sprite(self->sprite, 1);
 
-	return 0;
+	return self;
 }
 
 static void handle_tick(game_task *self) {

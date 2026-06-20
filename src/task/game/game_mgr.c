@@ -7,6 +7,7 @@ static void handle_tick(game_task *self);
 static void handle_event(game_task *self);
 
 game_task *game_mgr() {
+	game_task *self = new_game_task();
 	self->on_tick = handle_tick;
 	self->on_event = handle_event;
 
@@ -24,11 +25,11 @@ game_task *game_mgr() {
 	self->game->manager = self;
 
 	/* spawn sub-tasks */
-	if (game_spawn(self, player)) return 1;
-	if (game_spawn(self, enemy)) return 1;
-	if (game_spawn(self, axolotl)) return 1;
+	if (game_spawn(self, player())) return NULL;
+	if (game_spawn(self, enemy())) return NULL;
+	if (game_spawn(self, axolotl())) return NULL;
 
-	return 0;
+	return self;
 }
 
 static void handle_tick(game_task *self) {
