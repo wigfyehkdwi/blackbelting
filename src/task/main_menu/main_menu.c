@@ -9,13 +9,14 @@ static void handle_event(game_task *self);
 
 game_task *main_menu() {
 	game_task *self = new_game_task();
+	if (self == NULL) return NULL;
 	self->on_spawn = handle_spawn;
 	self->on_tick = handle_tick;
 	self->on_event = handle_event;
 	return self;
 }
 
-int handle_spawn(game_task *self) {
+static int handle_spawn(game_task *self) {
 	/* become the game manager */
 	self->game->manager = self;
 
