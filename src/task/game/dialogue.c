@@ -9,6 +9,7 @@ typedef struct {
 	char **text;
 } dialogue_state;
 
+static int handle_spawn(game_task *self);
 static void handle_tick(game_task *self);
 static void handle_event(game_task *self);
 static void proceed(game_task *self);
@@ -20,9 +21,14 @@ static char *placeholder_text[] = {
 
 game_task *dialogue() {
 	game_task *self = new_game_task();
+	if (self == NULL) return NULL;
+	self->on_spawn = handle_spawn;
 	self->on_tick = handle_tick;
 	self->on_event = handle_event;
+	return self;
+}
 
+static int handle_spawn(game_task *self) {
         game_task *mgr = self->game->manager;
         game_services *svc = mgr->data;
         svc->dialogue = self;
@@ -32,8 +38,7 @@ game_task *dialogue() {
 	state->len = sizeof(placeholder_text) / sizeof(placeholder_text[0]);
 	state->text = placeholder_text;
 	self->data = state;
-
-	return self;
+	return 0;
 }
 
 static void handle_tick(game_task *self) {

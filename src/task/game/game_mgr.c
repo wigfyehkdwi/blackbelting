@@ -3,15 +3,19 @@
 #include "enemy.h"
 #include "axolotl.h"
 
+static int handle_spawn(game_task *self);
 static void handle_tick(game_task *self);
 static void handle_event(game_task *self);
 
 game_task *game_mgr() {
 	game_task *self = new_game_task();
+	if (self == NULL) return NULL;
+	self->on_spawn = handle_spawn;
 	self->on_tick = handle_tick;
 	self->on_event = handle_event;
 
 	game_services *svc = calloc(sizeof(game_services), 1);
+	if (svc == NULL) return NULL;
 	self->data = svc;
 	/* hardcode keys for now */
 	svc->keys.up = SDLK_UP;
@@ -20,16 +24,18 @@ game_task *game_mgr() {
 	svc->keys.right = SDLK_RIGHT;
 	svc->keys.interact = SDLK_SPACE;
 	svc->keys.proceed = SDLK_SPACE; /* SDLK_RETURN; */
+	return self;
+}
 
+static int handle_spawn(game_task *self) {
 	/* become the game manager */
 	self->game->manager = self;
 
 	/* spawn sub-tasks */
-	if (game_spawn(self, player())) return NULL;
-	if (game_spawn(self, enemy())) return NULL;
-	if (game_spawn(self, axolotl())) return NULL;
-
-	return self;
+	if (game_spawn(self, player())) return -1;
+	if (game_spawn(self, enemy())) return -1;
+	if (game_spawn(self, axolotl())) return -1;
+	return 0;
 }
 
 static void handle_tick(game_task *self) {
