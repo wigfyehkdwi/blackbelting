@@ -11,6 +11,11 @@ typedef struct {
 	bool right;
 } axolotl_data;
 
+static char *placeholder_text[] = {
+        "hello world!",
+        "this is a test of the dialogue system!"
+};
+
 static int handle_spawn(game_task *self);
 static void handle_tick(game_task *self);
 static void handle_event(game_task *self);
@@ -43,6 +48,6 @@ static void handle_event(game_task *self) {
 	game_task *mgr = self->game->manager;
 	game_services *svc = mgr->data;
 	if (svc->dialogue == NULL && game_is_touching_sprite(self, svc->player->sprite)) {
-		game_spawn(mgr, dialogue());
+		game_spawn(mgr, dialogue(placeholder_text, 2));
 	}
 }

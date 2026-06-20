@@ -14,17 +14,18 @@ static void handle_tick(game_task *self);
 static void handle_event(game_task *self);
 static void proceed(game_task *self);
 
-static char *placeholder_text[] = {
-	"hello world!",
-	"this is a test of the dialogue system!"
-};
-
-game_task *dialogue() {
+game_task *dialogue(char **diag_text, int diag_len) {
 	game_task *self = new_game_task();
 	if (self == NULL) return NULL;
 	self->on_spawn = handle_spawn;
 	self->on_tick = handle_tick;
 	self->on_event = handle_event;
+
+	dialogue_state *state = calloc(sizeof(dialogue_state), 1);
+	state->key_down = true; /* HACK: guess the initial value should be true */
+	state->len = diag_len;
+	state->text = diag_text;
+	self->data = state;
 	return self;
 }
 
@@ -32,12 +33,6 @@ static int handle_spawn(game_task *self) {
         game_task *mgr = self->game->manager;
         game_services *svc = mgr->data;
         svc->dialogue = self;
-
-	dialogue_state *state = calloc(sizeof(dialogue_state), 1);
-	state->key_down = true; /* HACK: guess the initial value should be true */
-	state->len = sizeof(placeholder_text) / sizeof(placeholder_text[0]);
-	state->text = placeholder_text;
-	self->data = state;
 	return 0;
 }
 
