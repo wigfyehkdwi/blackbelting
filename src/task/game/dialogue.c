@@ -44,7 +44,7 @@ static void handle_tick(game_task *self) {
         SDL_GetWindowSize(self->game->window, &win_w, &win_h);
 
 
-	SDL_FRect rect = {.x = 0, .y = win_h - 100, .w = win_w, .h = 100}; /* TODO: Unhardcode */
+	SDL_FRect rect = {.x = 0, .y = win_h - 100, .w = win_w, .h = 100};
 	SDL_SetRenderDrawColor(self->game->renderer, 0, 0, 17, 255);
 	SDL_RenderFillRect(self->game->renderer, &rect);
 
