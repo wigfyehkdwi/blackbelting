@@ -27,7 +27,7 @@ static int handle_spawn(game_task *self);
 static void handle_tick(game_task *self);
 static void handle_event(game_task *self);
 
-game_task *weapon(game_task *owner) {
+game_task *weapon(game_task *owner, weapon_type *type) {
 	game_task *self = new_game_task();
 	if (self == NULL) return NULL;
 	self->on_spawn = handle_spawn;
@@ -37,7 +37,7 @@ game_task *weapon(game_task *owner) {
 	weapon_data *data = calloc(sizeof(weapon_data), 1);
 	if (data == NULL) return NULL;
 	data->owner = owner;
-	data->type = &sword;
+	data->type = type;
 	self->data = data;
 
 	return self;
