@@ -34,6 +34,7 @@ static int handle_spawn(game_task *self) {
 	if (self->sprite == NULL) return -1;
 	self->sprite->texture = IMG_LoadTexture(self->game->renderer, "res/game/sword.png");
 	if (self->sprite->texture == NULL) return -1;
+	SDL_SetTextureScaleMode(self->sprite->texture, SDL_SCALEMODE_PIXELART);
 	game_scale_sprite(self->sprite, 3);
 	return 0;
 }
