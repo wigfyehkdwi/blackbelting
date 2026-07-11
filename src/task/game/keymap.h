@@ -11,7 +11,8 @@ typedef struct {
         /* actions */
         Uint32 interact;
 	Uint32 proceed;
+	Uint32 attack;
 
-        /* misc */
-        Uint32 pause;
+	/* misc */
+	Uint32 pause;
 } key_mappings;

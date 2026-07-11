@@ -1,31 +1,15 @@
-#include "../../core/game.h"
+#include "weapon.h"
 #include <SDL3_image/SDL_image.h>
 
-enum attack_type {
-	MELEE
-};
+static int handle_spawn(game_task *self);
+static void handle_tick(game_task *self);
+static void handle_event(game_task *self);
 
-typedef struct {
-	enum attack_type type;
-	char *sprite_path;
-	float scale;
-} weapon_type;
-
-typedef struct {
-	game_task *owner;
-	weapon_type *type;
-} weapon_data;
-
-static weapon_type sword = {
+weapon_type weapon_sword = {
 	.type = MELEE,
 	.sprite_path = "res/game/sword.png",
 	.scale = 3
 };
-
-static int apply_weapon(game_task *self, weapon_type *type);
-static int handle_spawn(game_task *self);
-static void handle_tick(game_task *self);
-static void handle_event(game_task *self);
 
 game_task *weapon(game_task *owner, weapon_type *type) {
 	game_task *self = new_game_task();
@@ -43,7 +27,7 @@ game_task *weapon(game_task *owner, weapon_type *type) {
 	return self;
 }
 
-static int apply_weapon(game_task *self, weapon_type *type) {
+int apply_weapon(game_task *self, weapon_type *type) {
 	weapon_data *data = self->data;
 	data->type = type;
 

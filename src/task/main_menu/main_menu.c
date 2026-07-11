@@ -21,9 +21,13 @@ static int handle_spawn(game_task *self) {
 	self->game->manager = self;
 
 	/* spawn sub-tasks */
-	if (game_spawn(self, title())) return -1;
-	if (game_spawn(self, play_button())) return -1;
+	if (game_spawn(self, title())) goto fail;
+	if (game_spawn(self, play_button())) goto fail;
 	return 0;
+
+fail:
+	self->game->exit = true;
+	return -1;
 }
 
 static void handle_tick(game_task *self) {

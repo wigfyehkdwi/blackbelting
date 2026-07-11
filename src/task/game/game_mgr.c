@@ -32,10 +32,14 @@ static int handle_spawn(game_task *self) {
 	self->game->manager = self;
 
 	/* spawn sub-tasks */
-	if (game_spawn(self, player())) return -1;
-	if (game_spawn(self, enemy())) return -1;
-	if (game_spawn(self, axolotl())) return -1;
+	if (game_spawn(self, player())) goto fail;
+	if (game_spawn(self, enemy())) goto fail;
+	if (game_spawn(self, axolotl())) goto fail;
 	return 0;
+
+fail:
+	self->game->exit = true;
+	return -1;
 }
 
 static void handle_tick(game_task *self) {
