@@ -12,10 +12,11 @@ typedef struct {
 
 typedef struct {
 	game_task *owner;
-	weapon_type *type;
+	weapon_type *types[9];
+	int selection;
 } weapon_data;
 
 game_task *weapon(game_task *owner, weapon_type *type);
-int apply_weapon(game_task *self, weapon_type *type);
+int apply_weapon(game_task *self, int idx);
 
 extern weapon_type weapon_sword;

@@ -1,4 +1,5 @@
 #include "weapon.h"
+#include "game_mgr.h"
 #include <SDL3_image/SDL_image.h>
 
 static int handle_spawn(game_task *self);
@@ -21,15 +22,17 @@ game_task *weapon(game_task *owner, weapon_type *type) {
 	weapon_data *data = calloc(sizeof(weapon_data), 1);
 	if (data == NULL) return NULL;
 	data->owner = owner;
-	data->type = type;
+	data->types[0] = type;
 	self->data = data;
 
 	return self;
 }
 
-int apply_weapon(game_task *self, weapon_type *type) {
+int apply_weapon(game_task *self, int idx) {
 	weapon_data *data = self->data;
-	data->type = type;
+	data->selection = idx;
+	if (idx < 0) return 0;
+	weapon_type *type = data->types[idx];
 
 	if (self->sprite == NULL) self->sprite = new_game_sprite();
 	if (self->sprite == NULL) return -1;
@@ -42,17 +45,21 @@ int apply_weapon(game_task *self, weapon_type *type) {
 
 static int handle_spawn(game_task *self) {
 	weapon_data *data = self->data;
-	if (apply_weapon(self, data->type)) return -1;
+	if (apply_weapon(self, data->selection)) return -1;
 	return 0;
 }
 
 static void handle_tick(game_task *self) {
 	weapon_data *data = self->data;
+	if (data->selection < 0) return;
 	game_sprite *owner_spr = data->owner->sprite;
 	self->sprite->x = owner_spr->x + owner_spr->w - 4;
 	self->sprite->y = owner_spr->y + 3;
 	game_draw(self);
+
 }
 
 static void handle_event(game_task *self) {
+	game_services *svc = self->game->manager->data;
+	
 }
