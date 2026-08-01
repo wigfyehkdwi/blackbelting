@@ -52,9 +52,15 @@ static int handle_spawn(game_task *self) {
 static void handle_tick(game_task *self) {
 	weapon_data *data = self->data;
 	if (data->selection < 0) return;
+
 	game_sprite *owner_spr = data->owner->sprite;
+	int old_x = self->sprite->x;
+	int old_y = self->sprite->y;
 	self->sprite->x = owner_spr->x + owner_spr->w - 4;
 	self->sprite->y = owner_spr->y + 3;
+
+	if (old_x < self->sprite->x) self->sprite->flip = SDL_FLIP_HORIZONTAL;
+	else if (old_x > self->sprite->x) self->sprite->flip = SDL_FLIP_NONE;
 	game_draw(self);
 
 }

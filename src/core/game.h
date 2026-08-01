@@ -9,6 +9,9 @@ typedef struct game_sprite {
 	float y;
 	float w;
 	float h;
+	double angle;
+	SDL_FPoint *center;
+	SDL_FlipMode flip;
 	SDL_Texture *texture;
 	bool ui;
 } game_sprite;

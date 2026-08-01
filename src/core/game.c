@@ -81,6 +81,8 @@ game_task *new_game_task() {
 
 game_sprite *new_game_sprite() {
 	game_sprite *sprite = calloc(sizeof(game_sprite), 1);
+	if (sprite == NULL) return NULL;
+	sprite->flip = SDL_FLIP_NONE;
 	return sprite;
 }
 
@@ -125,7 +127,7 @@ int game_draw(game_task *task) {
 		rect.y -= game->camera.y;
 	}
 
-	return SDL_RenderTexture(game->renderer, texture, NULL, &rect);
+	return SDL_RenderTextureRotated(game->renderer, texture, NULL, &rect, sprite->angle, sprite->center, sprite->flip);
 }
 
 bool game_is_touching_pos(game_sprite *sprite, int x, int y) {
