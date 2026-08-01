@@ -1,6 +1,7 @@
 #include "enemy.h"
 #include "game_mgr.h"
 #include "dialogue.h"
+#include "weapon.h"
 #include <SDL3_image/SDL_image.h>
 
 enum enemy_phase {
@@ -12,6 +13,7 @@ enum enemy_phase {
 
 typedef struct {
 	enum enemy_phase phase;
+	game_task *weapon;
 } enemy_data;
 
 static int handle_spawn(game_task *self);
@@ -49,7 +51,11 @@ static void handle_tick(game_task *self) {
 	game_task *mgr = self->game->manager;
 	game_services *svc = mgr->data;
 	if (state->phase == IDLE && svc->dialogue == NULL && game_is_touching_sprite(self, svc->player->sprite)) {
-		game_spawn(mgr, dialogue(diag_text, 1));
+		game_spawn(self, dialogue(diag_text, 1));
+		state->phase++;
+	} else if (state->phase == DIALOGUE && svc->dialogue == NULL) {
+		state->weapon = weapon(self, &weapon_sword);
+		game_spawn(self, state->weapon);
 		state->phase++;
 	}
 }
