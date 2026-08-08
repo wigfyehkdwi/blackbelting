@@ -14,9 +14,7 @@ game_task *new_level_1() {
 }
 
 static int handle_spawn(game_task *self) {
-	game_services *svc = self->game->manager->data;
-	svc->level = self;
-
+	/* updating the current level is now carried out by game_mgr.c */
 	if (game_spawn(self, player())) return -1;
 	if (game_spawn(self, enemy())) return -1;
 	if (game_spawn(self, axolotl())) return -1;

@@ -8,6 +8,7 @@
 static int handle_spawn(game_task *self);
 static void handle_tick(game_task *self);
 static void handle_event(game_task *self);
+static int switch_level(game_task *self, int idx);
 
 game_task *game_mgr() {
 	game_task *self = new_game_task();
@@ -33,12 +34,12 @@ static int handle_spawn(game_task *self) {
 	/* become the game manager */
 	self->game->manager = self;
 
-	/* spawn sub-tasks */
-	if (game_spawn(self, levels[0].create())) return -1;
-	return 0;
+	if (switch_level(self, 0)) {
+		self->game->exit = true;
+		return -1;
+	}
 
-	self->game->exit = true;
-	return -1;
+	return 0;
 }
 
 static void handle_tick(game_task *self) {
@@ -50,4 +51,12 @@ static void handle_event(game_task *self) {
 	if (self->game->event.type == SDL_EVENT_QUIT) {
 		self->game->exit = true;
 	}
+}
+
+static int switch_level(game_task *self, int idx) {
+	game_services *svc = self->data;
+	if (svc->level != NULL) game_killall(svc->level);
+
+	svc->level = levels[idx].create();
+	return game_spawn(self, svc->level);
 }
