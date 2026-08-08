@@ -3,6 +3,8 @@
 #include "enemy.h"
 #include "axolotl.h"
 
+#include "level/levels.h"
+
 static int handle_spawn(game_task *self);
 static void handle_tick(game_task *self);
 static void handle_event(game_task *self);
@@ -32,12 +34,9 @@ static int handle_spawn(game_task *self) {
 	self->game->manager = self;
 
 	/* spawn sub-tasks */
-	if (game_spawn(self, player())) goto fail;
-	if (game_spawn(self, enemy())) goto fail;
-	if (game_spawn(self, axolotl())) goto fail;
+	if (game_spawn(self, levels[0].create())) return -1;
 	return 0;
 
-fail:
 	self->game->exit = true;
 	return -1;
 }
