@@ -3,6 +3,7 @@
 #include <SDL3_image/SDL_image.h>
 
 static int handle_spawn(game_task *self);
+static float get_x_offset(game_task *self);
 static void handle_tick(game_task *self);
 static void handle_event(game_task *self);
 
@@ -49,18 +50,26 @@ static int handle_spawn(game_task *self) {
 	return 0;
 }
 
+static float get_x_offset(game_task *self) {
+	weapon_data *data = self->data;
+	float owner_w = data->owner->sprite->w;
+
+	if (self->sprite->flip == SDL_FLIP_HORIZONTAL) return -owner_w + 16;
+	return owner_w - 4;
+}
+
 static void handle_tick(game_task *self) {
 	weapon_data *data = self->data;
 	if (data->selection < 0) return;
 
 	game_sprite *owner_spr = data->owner->sprite;
-	int old_x = self->sprite->x;
-	int old_y = self->sprite->y;
-	self->sprite->x = owner_spr->x + owner_spr->w - 4;
-	self->sprite->y = owner_spr->y + 3;
+	float old_x = self->sprite->x - get_x_offset(self);
+	if (owner_spr->x < old_x) self->sprite->flip = SDL_FLIP_HORIZONTAL;
+	else if (owner_spr->x > old_x) self->sprite->flip = SDL_FLIP_NONE;
 
-	if (old_x < self->sprite->x) self->sprite->flip = SDL_FLIP_HORIZONTAL;
-	else if (old_x > self->sprite->x) self->sprite->flip = SDL_FLIP_NONE;
+	self->sprite->x = owner_spr->x + get_x_offset(self);
+	self->sprite->y = owner_spr->y + 3;
+//printf("owner_spr->x = %f, old_x = %f, self->sprite->x = %f")
 	game_draw(self);
 
 }
