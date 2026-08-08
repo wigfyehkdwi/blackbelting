@@ -13,6 +13,12 @@ weapon_type weapon_sword = {
 	.scale = 3
 };
 
+weapon_type weapon_gun = {
+	.type = RANGED,
+	.sprite_path = "res/game/gun.png",
+	.scale = 2.2
+};
+
 game_task *weapon(game_task *owner, weapon_type *type) {
 	game_task *self = new_game_task();
 	if (self == NULL) return NULL;

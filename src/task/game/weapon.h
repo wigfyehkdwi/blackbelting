@@ -1,7 +1,8 @@
 #include "../../core/game.h"
 
 enum attack_type {
-	MELEE
+	MELEE,
+	RANGED
 };
 
 typedef struct {
@@ -20,3 +21,4 @@ game_task *weapon(game_task *owner, weapon_type *type);
 int apply_weapon(game_task *self, int idx);
 
 extern weapon_type weapon_sword;
+extern weapon_type weapon_gun;
