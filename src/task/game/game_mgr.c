@@ -27,6 +27,7 @@ game_task *game_mgr() {
 	svc->keys.right = SDLK_RIGHT;
 	svc->keys.interact = SDLK_SPACE;
 	svc->keys.proceed = SDLK_SPACE; /* SDLK_RETURN; */
+	svc->keys.attack = SDLK_SPACE;
 	return self;
 }
 

@@ -1,6 +1,7 @@
 #include "player.h"
 #include "game_mgr.h"
 #include "weapon.h"
+#include "adapter.h"
 #include <SDL3_image/SDL_image.h>
 
 typedef struct {
@@ -24,6 +25,11 @@ game_task *player() {
 	self->on_event = handle_event;
 	self->data = calloc(sizeof(player_data), 1);
 	if (self->data == NULL) return NULL;
+	game_adapter *adapter = new_game_adapter();
+	if (adapter == NULL) return NULL;
+	adapter->mortality = calloc(sizeof(mortal_state), 1);
+	if (adapter->mortality == NULL) return NULL;
+	self->adapter = adapter;
 	return self;
 }
 
@@ -46,6 +52,9 @@ static int handle_spawn(game_task *self) {
 static void handle_tick(game_task *self) {
 	self->z = -69;
 	player_data *data = self->data;
+	game_adapter *adapter = self->adapter;
+
+	mortal_tick(self, adapter->mortality);
 
 	/* movement (very basic for now) */
 	if (data->up) self->sprite->y -= self->game->delta*0.63;
@@ -59,6 +68,9 @@ static void handle_tick(game_task *self) {
 	SDL_GetWindowSize(self->game->window, &win_w, &win_h);
 	self->game->camera.x = SDL_clamp(self->game->camera.x + win_w/2, self->sprite->x - 100, self->sprite->x + 100) - win_w/2;
 	self->game->camera.y = SDL_clamp(self->game->camera.y + win_h/2, self->sprite->y - 100, self->sprite->y + 100) - win_h/2;
+
+
+mortal_hurt(self, adapter->mortality, 0, false); /* test */
 
 	game_draw(self);
 }

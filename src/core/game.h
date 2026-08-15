@@ -33,6 +33,7 @@ typedef struct game_task {
 	struct game_task *parent;
 	game_sprite *sprite;
 	void *data;
+	void *adapter;
 
 	/* Intrusive linked list */
 	struct game_task *prev;
