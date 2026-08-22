@@ -17,11 +17,13 @@ typedef struct game_sprite {
 } game_sprite;
 
 typedef struct game_camera {
-	int x;
-	int y;
+	float x;
+	float y;
 } game_camera;
 
 typedef struct game_task {
+	int magic;
+	int flags;
 	int z;
 
 	int (*on_spawn)(struct game_task *);

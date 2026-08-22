@@ -1,10 +1,13 @@
 #include "weapon.h"
 #include "game_mgr.h"
+#include "player.h"
+#include "adapter.h"
 #include <SDL3_image/SDL_image.h>
 
 static int handle_spawn(game_task *self);
 static float get_x_offset(game_task *self);
 static void handle_tick(game_task *self);
+static void do_attack(game_task *self);
 static void handle_event(game_task *self);
 
 weapon_type weapon_sword = {
@@ -22,6 +25,7 @@ weapon_type weapon_gun = {
 game_task *weapon(game_task *owner, weapon_type *type) {
 	game_task *self = new_game_task();
 	if (self == NULL) return NULL;
+	self->magic = WEAPON_MAGIC;
 	self->on_spawn = handle_spawn;
 	self->on_tick = handle_tick;
 	self->on_event = handle_event;
@@ -80,7 +84,28 @@ static void handle_tick(game_task *self) {
 
 }
 
-static void handle_event(game_task *self) {
-	game_services *svc = self->game->manager->data;
-	
+static void do_attack(game_task *self) {
+	game_state *game = self->game;
+	for (game_task *task = game->tasks.next; task != &game->tasks; task = task->next) {
+		if (!(task->flags & MORTAL_FLAG) || !game_is_touching_sprite(self, task->sprite)) continue;
+		game_adapter *adapter = task->adapter;
+		mortal_hurt(task, adapter->mortality, 10, false);
+	}
 }
+
+static void handle_event(game_task *self) {
+        weapon_data *state = self->data;
+        game_services *svc = self->game->manager->data;
+
+	if (state->owner->magic != PLAYER_MAGIC) return;
+
+        if (!state->key_down) {
+               if (self->game->event.type != SDL_EVENT_KEY_DOWN || ((SDL_KeyboardEvent *)&self->game->event)->key != svc->keys.attack) return;
+                state->key_down = true;
+                do_attack(self);
+        } else {
+                if (self->game->event.type != SDL_EVENT_KEY_UP || ((SDL_KeyboardEvent *)&self->game->event)->key != svc->keys.attack) return;
+                state->key_down = false;
+        }
+}
+

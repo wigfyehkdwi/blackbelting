@@ -20,6 +20,8 @@ static void handle_key(player_data *data, key_mappings *keys, Uint32 key, bool s
 game_task *player() {
 	game_task *self = new_game_task();
 	if (self == NULL) return NULL;
+	self->magic = PLAYER_MAGIC;
+	self->flags = MORTAL_FLAG;
 	self->on_spawn = handle_spawn;
 	self->on_tick = handle_tick;
 	self->on_event = handle_event;
@@ -68,9 +70,6 @@ static void handle_tick(game_task *self) {
 	SDL_GetWindowSize(self->game->window, &win_w, &win_h);
 	self->game->camera.x = SDL_clamp(self->game->camera.x + win_w/2, self->sprite->x - 100, self->sprite->x + 100) - win_w/2;
 	self->game->camera.y = SDL_clamp(self->game->camera.y + win_h/2, self->sprite->y - 100, self->sprite->y + 100) - win_h/2;
-
-
-mortal_hurt(self, adapter->mortality, 0, false); /* test */
 
 	game_draw(self);
 }

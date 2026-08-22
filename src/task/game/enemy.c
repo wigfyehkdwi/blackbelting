@@ -2,6 +2,7 @@
 #include "game_mgr.h"
 #include "dialogue.h"
 #include "weapon.h"
+#include "adapter.h"
 #include <SDL3_image/SDL_image.h>
 
 enum enemy_phase {
@@ -41,6 +42,12 @@ static int handle_spawn(game_task *self) {
 	if (self->sprite->texture == NULL) return -1;
 	game_scale_sprite(self->sprite, 1);
 
+	game_adapter *adapter = calloc(sizeof(game_adapter), 1);
+	if (adapter == NULL) return -1;
+	adapter->mortality = calloc(sizeof(mortal_state), 1);
+	if (adapter->mortality == NULL) return -1;
+	self->adapter = adapter;
+
 	return 0;
 }
 
@@ -56,6 +63,7 @@ static void handle_tick(game_task *self) {
 	} else if (state->phase == DIALOGUE && svc->dialogue == NULL) {
 		state->weapon = weapon(self, &weapon_sword);
 		game_spawn(self, state->weapon);
+		self->flags = MORTAL_FLAG;
 		state->phase++;
 	}
 }
