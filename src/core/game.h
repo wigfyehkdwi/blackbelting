@@ -71,7 +71,7 @@ void game_free(game_task *task);
 void game_event(game_state *game);
 void game_tick(game_state *game);
 int game_draw(game_task *task);
-bool game_is_touching_pos(game_sprite *sprite, int x, int y);
+bool game_is_touching_pos(game_sprite *sprite, float x, float y);
 int game_is_clicked(game_task *task);
 bool game_is_touching_sprite(game_task *task, game_sprite *target);
 void game_scale_sprite(game_sprite *sprite, float mul);

@@ -130,7 +130,7 @@ int game_draw(game_task *task) {
 	return SDL_RenderTextureRotated(game->renderer, texture, NULL, &rect, sprite->angle, sprite->center, sprite->flip);
 }
 
-bool game_is_touching_pos(game_sprite *sprite, int x, int y) {
+bool game_is_touching_pos(game_sprite *sprite, float x, float y) {
 	if (x < sprite->x || x > (sprite->x + sprite->w)) return false;
 	if (y < sprite->y || y > (sprite->y + sprite->h)) return false;
 	return true;
@@ -160,8 +160,8 @@ int game_is_clicked(game_task *task) {
 
 bool game_is_touching_sprite(game_task *task, game_sprite *target) {
 	game_sprite *sprite = task->sprite;
-	int tx = target->x;
-	int ty = target->y;
+	float tx = target->x;
+	float ty = target->y;
 
 	if (target->ui != sprite->ui) {
 		if (target->ui) {

@@ -72,6 +72,6 @@ static void handle_tick(game_task *self) {
 		state->phase++;
 	} else if (state->phase == FIGHT) {
 		if (game_is_touching_sprite(self, svc->player->sprite)) weapon_attack(adapter->weapon, svc->player);
-		else follow_tick(self, svc->player, 0.5);
+		else follow_tick(self, svc->player, 0.1);
 	}
 }
