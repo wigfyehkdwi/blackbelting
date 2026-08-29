@@ -1,7 +1,7 @@
 #include "mortal.h"
 
 void mortal_tick(game_task *task, mortal_state *state) {
-	if (task->game->ticks == (state->damage_tick + DAMAGE_DURATION)) {
+	if (task->game->ticks >= (state->damage_tick + DAMAGE_DURATION)) {
 		if (state->health <= 0) state->dead = true;
 		else SDL_SetTextureColorMod(task->sprite->texture, 255, 255, 255);
 	}

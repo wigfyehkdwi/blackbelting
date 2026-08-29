@@ -1,7 +1,7 @@
 #include "game_mgr.h"
 
 #define MORTAL_FLAG 0x1
-#define DAMAGE_DURATION 69420
+#define DAMAGE_DURATION 500
 
 typedef struct {
   int health;

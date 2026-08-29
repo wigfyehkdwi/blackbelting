@@ -3,6 +3,7 @@
 #include "dialogue.h"
 #include "weapon.h"
 #include "adapter.h"
+#include "follow.h"
 #include <SDL3_image/SDL_image.h>
 
 enum enemy_phase {
@@ -14,7 +15,6 @@ enum enemy_phase {
 
 typedef struct {
 	enum enemy_phase phase;
-	game_task *weapon;
 } enemy_data;
 
 static int handle_spawn(game_task *self);
@@ -46,12 +46,17 @@ static int handle_spawn(game_task *self) {
 	if (adapter == NULL) return -1;
 	adapter->mortality = calloc(sizeof(mortal_state), 1);
 	if (adapter->mortality == NULL) return -1;
+	adapter->mortality->health = 20;
 	self->adapter = adapter;
 
 	return 0;
 }
 
 static void handle_tick(game_task *self) {
+	game_adapter *adapter = self->adapter;
+	mortal_tick(self, adapter->mortality);
+	if (adapter->mortality->dead) game_killall(self);
+
 	game_draw(self);
 
 	enemy_data *state = self->data;
@@ -61,9 +66,12 @@ static void handle_tick(game_task *self) {
 		game_spawn(self, dialogue(diag_text, 1));
 		state->phase++;
 	} else if (state->phase == DIALOGUE && svc->dialogue == NULL) {
-		state->weapon = weapon(self, &weapon_sword);
-		game_spawn(self, state->weapon);
+		adapter->weapon = weapon(&weapon_sword);
+		game_spawn(self, adapter->weapon);
 		self->flags = MORTAL_FLAG;
 		state->phase++;
+	} else if (state->phase == FIGHT) {
+		if (game_is_touching_sprite(self, svc->player->sprite)) weapon_attack(adapter->weapon, svc->player);
+		else follow_tick(self, svc->player, 0.5);
 	}
 }

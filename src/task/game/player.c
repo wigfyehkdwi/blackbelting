@@ -46,7 +46,9 @@ static int handle_spawn(game_task *self) {
 	game_services *svc = mgr->data;
 	svc->player = self;
 
-	if (game_spawn(self, weapon(self, &weapon_sword))) return -1;
+	game_adapter *adapter = self->adapter;
+	adapter->weapon = weapon(&weapon_sword);
+	if (game_spawn(self, adapter->weapon)) return -1;
 
 	return 0;
 }

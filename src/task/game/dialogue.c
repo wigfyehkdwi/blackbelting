@@ -22,7 +22,7 @@ game_task *dialogue(char **diag_text, int diag_len) {
 	self->on_event = handle_event;
 
 	dialogue_state *state = calloc(sizeof(dialogue_state), 1);
-	state->key_down = true; /* HACK: guess the initial value should be true */
+	state->key_down = false; /* HACK: guess the initial value */
 	state->len = diag_len;
 	state->text = diag_text;
 	self->data = state;
@@ -55,14 +55,14 @@ static void handle_tick(game_task *self) {
 
 static void handle_event(game_task *self) {
 	dialogue_state *state = self->data;
-	/*game_services *svc = self->game->manager->data;*/
+	game_services *svc = self->game->manager->data;
 
         if (!state->key_down) {
-	       if (self->game->event.type != SDL_EVENT_KEY_DOWN /*|| ((SDL_KeyboardEvent *)&self->game->event)->key != svc->keys.proceed*/) return;
+	       if (self->game->event.type != SDL_EVENT_KEY_DOWN || ((SDL_KeyboardEvent *)&self->game->event)->key != svc->keys.proceed) return;
 		state->key_down = true;
 		proceed(self);
 	} else {
-		if (self->game->event.type != SDL_EVENT_KEY_UP /*|| ((SDL_KeyboardEvent *)&self->game->event)->key != svc->keys.proceed*/) return;
+		if (self->game->event.type != SDL_EVENT_KEY_UP || ((SDL_KeyboardEvent *)&self->game->event)->key != svc->keys.proceed) return;
 		state->key_down = false;
 	}
 }
