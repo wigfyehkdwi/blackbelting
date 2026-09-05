@@ -181,6 +181,14 @@ bool game_is_touching_sprite(game_task *task, game_sprite *target) {
 	return game_is_touching_rect(sprite, tx, ty, target->w, target->h);
 }
 
+bool game_is_touching_task(game_task *task, game_task *target) {
+	game_sprite *sprite = task->sprite;
+	for (int i = 0; i < target->hitbox_count; i++) {
+		if (game_is_touching_rect(sprite, target->hitboxes[i])) return true;
+	}
+	return false;
+}
+
 void game_scale_sprite(game_sprite *sprite, float mul) {
 	sprite->w = sprite->texture->w * mul;
 	sprite->h = sprite->texture->h * mul;

@@ -37,6 +37,9 @@ typedef struct game_task {
 	void *data;
 	void *adapter;
 
+	int hitbox_count;
+	SDL_FRect *hitboxes;
+
 	/* Intrusive linked list */
 	struct game_task *prev;
 	struct game_task *next;
