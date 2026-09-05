@@ -3,6 +3,7 @@
 
 static void game_nop(game_task *self);
 static int game_inop(game_task *self);
+static bool out_of_range(float val, float a, float b);
 
 void game_link(game_task *task) {
 	printf("linking task %p\n", task);
@@ -130,9 +131,13 @@ int game_draw(game_task *task) {
 	return SDL_RenderTextureRotated(game->renderer, texture, NULL, &rect, sprite->angle, sprite->center, sprite->flip);
 }
 
-bool game_is_touching_pos(game_sprite *sprite, float x, float y) {
-	if (x < sprite->x || x > (sprite->x + sprite->w)) return false;
-	if (y < sprite->y || y > (sprite->y + sprite->h)) return false;
+static bool out_of_range(float val, float a, float b) {
+	return val < a || val > (a + b);
+}
+
+bool game_is_touching_rect(game_sprite *sprite, float x, float y, float w, float h) {
+	if (out_of_range(x, sprite->x, sprite->w) && out_of_range(x + w, sprite->x, sprite->w)) return false;
+	if (out_of_range(y, sprite->y, sprite->h) && out_of_range(y + h, sprite->y, sprite->h)) return false;
 	return true;
 }
 
@@ -173,7 +178,7 @@ bool game_is_touching_sprite(game_task *task, game_sprite *target) {
 		}
 	}
 
-	return game_is_touching_pos(sprite, tx, ty);
+	return game_is_touching_rect(sprite, tx, ty, target->w, target->h);
 }
 
 void game_scale_sprite(game_sprite *sprite, float mul) {
