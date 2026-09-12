@@ -178,13 +178,15 @@ bool game_is_touching_sprite(game_task *task, game_sprite *target) {
 		}
 	}
 
-	return game_is_touching_rect(sprite, tx, ty, target->w, target->h);
+	return game_is_touching_rect(sprite, tx, ty, target->w - 1, target->h - 1);
 }
 
 bool game_is_touching_task(game_task *task, game_task *target) {
 	game_sprite *sprite = task->sprite;
+	SDL_FRect *rect;
 	for (int i = 0; i < target->hitbox_count; i++) {
-		if (game_is_touching_rect(sprite, target->hitboxes[i])) return true;
+		rect = &target->hitboxes[i];
+		if (game_is_touching_rect(sprite, rect->x + sprite->x, rect->y + sprite->y, rect->w - 1, rect->h - 1)) return true;
 	}
 	return false;
 }
