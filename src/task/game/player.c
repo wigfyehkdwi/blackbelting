@@ -21,7 +21,6 @@ game_task *player() {
 	game_task *self = new_game_task();
 	if (self == NULL) return NULL;
 	self->magic = PLAYER_MAGIC;
-	self->flags = MORTAL_FLAG;
 	self->on_spawn = handle_spawn;
 	self->on_tick = handle_tick;
 	self->on_event = handle_event;
@@ -38,9 +37,10 @@ game_task *player() {
 static int handle_spawn(game_task *self) {
 	self->sprite = calloc(sizeof(game_sprite), 1);
 	if (self->sprite == NULL) return -1;
-	self->sprite->texture = IMG_LoadTexture(self->game->renderer, "res/game/player.png");
+	self->sprite->texture = IMG_LoadTexture(self->game->renderer, "res/game/player_a.png");
 	if (self->sprite->texture == NULL) return -1;
-	game_scale_sprite(self->sprite, 1);
+	SDL_SetTextureScaleMode(self->sprite->texture, SDL_SCALEMODE_PIXELART);
+	game_scale_sprite(self->sprite, 4);
 
 	game_task *mgr = self->game->manager;
 	game_services *svc = mgr->data;

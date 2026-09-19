@@ -91,7 +91,7 @@ void weapon_attack(game_task *self, game_task *target) {
 static void do_attack(game_task *self) {
 	game_state *game = self->game;
 	for (game_task *task = game->tasks.next; task != &game->tasks; task = task->next) {
-		if (!(task->flags & MORTAL_FLAG) || !game_is_touching_sprite(self, task->sprite)) continue;
+		if (task->adapter == NULL || ((game_adapter *)task->adapter)->mortality == NULL || !game_is_touching_sprite(self, task->sprite)) continue;
 		weapon_attack(self, task);
 	}
 }

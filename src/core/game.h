@@ -23,7 +23,6 @@ typedef struct game_camera {
 
 typedef struct game_task {
 	int magic;
-	int flags;
 	int z;
 
 	int (*on_spawn)(struct game_task *);

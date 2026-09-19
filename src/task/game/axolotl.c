@@ -33,7 +33,7 @@ static int handle_spawn(game_task *self) {
 	self->sprite = calloc(sizeof(game_sprite), 1);
 	if (self->sprite == NULL) return -1;
 	self->sprite->x = 69;
-	self->sprite->texture = IMG_LoadTexture(self->game->renderer, "res/game/axolotl.jpg");
+	self->sprite->texture = IMG_LoadTexture(self->game->renderer, "res/game/sign.png");
 	if (self->sprite->texture == NULL) return -1;
 	game_scale_sprite(self->sprite, 1);
 
