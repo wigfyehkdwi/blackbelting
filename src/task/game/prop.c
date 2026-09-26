@@ -1,0 +1,38 @@
+#include "game_mgr.h"
+#include <SDL3_image/SDL_image.h>
+
+
+static int handle_spawn(game_task *self);
+static void handle_tick(game_task *self);
+static void handle_event(game_task *self);
+
+game_task *axolotl() {
+	game_task *self = new_game_task();
+	if (self == NULL) return NULL;
+	self->on_spawn = handle_spawn;
+	self->on_tick = handle_tick;
+	self->on_event = handle_event;
+
+	self->sprite = new_game_sprite();
+	if (self->sprite == NULL) return NULL;
+}
+
+static int handle_spawn(game_task *self) {
+	self->sprite->texture = IMG_LoadTexture(self->game->renderer, "r");
+	if (self->sprite->texture == NULL) return -1;
+	game_scale_sprite(self->sprite, 1);
+
+	return 0;
+}
+
+static void handle_tick(game_task *self) {
+	game_draw(self);
+}
+
+static void handle_event(game_task *self) {
+	game_task *mgr = self->game->manager;
+	game_services *svc = mgr->data;
+	if (svc->dialogue == NULL && game_is_touching_sprite(self, svc->player->sprite)) {
+		game_spawn(mgr, dialogue(placeholder_text, 2));
+	}
+}
