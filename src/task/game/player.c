@@ -26,17 +26,20 @@ game_task *player() {
 	self->on_event = handle_event;
 	self->data = calloc(sizeof(player_data), 1);
 	if (self->data == NULL) return NULL;
+
 	game_adapter *adapter = new_game_adapter();
 	if (adapter == NULL) return NULL;
 	adapter->mortality = calloc(sizeof(mortal_state), 1);
 	if (adapter->mortality == NULL) return NULL;
 	self->adapter = adapter;
+
+	self->sprite = new_game_sprite();
+	if (self->sprite == NULL) return NULL;
+
 	return self;
 }
 
 static int handle_spawn(game_task *self) {
-	self->sprite = calloc(sizeof(game_sprite), 1);
-	if (self->sprite == NULL) return -1;
 	self->sprite->texture = IMG_LoadTexture(self->game->renderer, "res/game/player_a.png");
 	if (self->sprite->texture == NULL) return -1;
 	SDL_SetTextureScaleMode(self->sprite->texture, SDL_SCALEMODE_PIXELART);

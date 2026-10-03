@@ -1,7 +1,8 @@
 #include "level_1.h"
 #include "../player.h"
 #include "../enemy.h"
-#include "../axolotl.h"
+#include "../sign.h"
+#include "../literal.h"
 
 static int handle_spawn(game_task *self);
 
@@ -15,9 +16,10 @@ game_task *new_level_1() {
 
 static int handle_spawn(game_task *self) {
 	/* updating the current level is now carried out by game_mgr.c */
+	if (game_spawn(self, literal_img(0, 0, "res/levels/level_1.png"))) return -1;
 	if (game_spawn(self, player())) return -1;
 	if (game_spawn(self, enemy())) return -1;
-	if (game_spawn(self, axolotl())) return -1;
+	if (game_spawn(self, sign(6, 9))) return -1;
 	return 0;
 }
 

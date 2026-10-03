@@ -1,7 +1,4 @@
 #include "game_mgr.h"
-#include "player.h"
-#include "enemy.h"
-#include "axolotl.h"
 
 #include "level/levels.h"
 

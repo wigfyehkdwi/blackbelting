@@ -1,41 +1,29 @@
-#include "axolotl.h"
 #include "game_mgr.h"
-#include "dialogue.h"
 #include <SDL3_image/SDL_image.h>
-
-typedef struct {
-	/* key states */
-	bool up;
-	bool down;
-	bool left;
-	bool right;
-} axolotl_data;
-
-static char *placeholder_text[] = {
-        "hello world!",
-        "this is a test of the dialogue system!"
-};
 
 static int handle_spawn(game_task *self);
 static void handle_tick(game_task *self);
 static void handle_event(game_task *self);
 
-game_task *axolotl() {
+game_task *sign(float x, float y) {
 	game_task *self = new_game_task();
 	if (self == NULL) return NULL;
 	self->on_spawn = handle_spawn;
 	self->on_tick = handle_tick;
 	self->on_event = handle_event;
+
+	self->sprite = new_game_sprite();
+	if (self->sprite == NULL) return NULL;
+	self->sprite->x = x;
+	self->sprite->y = y;
+
 	return self;
 }
 
 static int handle_spawn(game_task *self) {
-	self->sprite = calloc(sizeof(game_sprite), 1);
-	if (self->sprite == NULL) return -1;
-	self->sprite->x = 69;
 	self->sprite->texture = IMG_LoadTexture(self->game->renderer, "res/game/sign.png");
 	if (self->sprite->texture == NULL) return -1;
-	game_scale_sprite(self->sprite, 1);
+	game_scale_sprite(self->sprite, 4);
 
 	return 0;
 }
@@ -48,6 +36,6 @@ static void handle_event(game_task *self) {
 	game_task *mgr = self->game->manager;
 	game_services *svc = mgr->data;
 	if (svc->dialogue == NULL && game_is_touching_sprite(self, svc->player->sprite)) {
-		game_spawn(mgr, dialogue(placeholder_text, 2));
+		//game_spawn(mgr, dialogue(placeholder_text, 2));
 	}
 }
