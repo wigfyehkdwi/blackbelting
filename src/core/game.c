@@ -1,9 +1,11 @@
 #include "game.h"
+#include <SDL3_image/SDL_image.h>
 #include <stdio.h>
 
 static void game_nop(game_task *self);
 static int game_inop(game_task *self);
 static bool out_of_range(float val, float a, float b);
+static int game_load_texture(game_task *task, char *filepath);
 
 void game_link(game_task *task) {
 	printf("linking task %p\n", task);
@@ -38,6 +40,16 @@ int game_spawn(game_task *parent, game_task *task) {
 	if (task == NULL) return -127;
 	task->parent = parent;
 	task->game = parent->game;
+
+	/* resolve staged textures */
+	if (task->sprite != NULL && task->sprite->texture != NULL) {
+		char *filepath = (void *)task->sprite->texture;
+		int result = game_load_texture(task, filepath);
+		printf("%s %d\n", filepath, result);
+		free(filepath);
+		if (result) return -126;
+	}
+
 	game_link(task);
 	return task->on_spawn(task);
 }
@@ -110,6 +122,28 @@ void game_tick(game_state *game) {
 		task->on_tick(task);
 	}
 	SDL_RenderPresent(game->renderer);
+}
+
+int game_load_sprite(game_task *task, char *filepath) {
+	if (task->sprite == NULL) {
+		task->sprite = new_game_sprite();
+		if (task->sprite == NULL) return -1;
+	}
+
+	if (task->game == NULL) {
+		size_t copy_size = strlen(filepath) + 1;
+		char *filepath_staged = malloc(copy_size);
+		memcpy(filepath_staged, filepath, copy_size);
+		*(void **)&task->sprite->texture = filepath_staged;
+		return 0;
+	}
+
+	return game_load_texture(task, filepath);
+}
+
+static int game_load_texture(game_task *task, char *filepath) {
+	task->sprite->texture = IMG_LoadTexture(task->game->renderer, filepath);
+	return (task->sprite->texture == NULL) ? -1 : 0;
 }
 
 int game_draw(game_task *task) {

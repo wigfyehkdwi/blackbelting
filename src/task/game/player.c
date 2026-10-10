@@ -2,7 +2,6 @@
 #include "game_mgr.h"
 #include "weapon.h"
 #include "adapter.h"
-#include <SDL3_image/SDL_image.h>
 
 typedef struct {
 	/* key states */
@@ -40,8 +39,7 @@ game_task *player() {
 }
 
 static int handle_spawn(game_task *self) {
-	self->sprite->texture = IMG_LoadTexture(self->game->renderer, "res/game/player_a.png");
-	if (self->sprite->texture == NULL) return -1;
+	if (game_load_sprite(self, "res/game/player_a.png")) return -1;
 	SDL_SetTextureScaleMode(self->sprite->texture, SDL_SCALEMODE_PIXELART);
 	game_scale_sprite(self->sprite, 4);
 
