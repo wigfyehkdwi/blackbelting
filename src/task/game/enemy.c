@@ -40,7 +40,7 @@ static int handle_spawn(game_task *self) {
 	if (self->sprite == NULL) return -1;
 	self->sprite->texture = IMG_LoadTexture(self->game->renderer, "res/game/enemy_a.png");
 	if (self->sprite->texture == NULL) return -1;
-	game_scale_sprite(self->sprite, 1);
+	game_scale_sprite(self->sprite, 4);
 
 	game_adapter *adapter = calloc(sizeof(game_adapter), 1);
 	if (adapter == NULL) return -1;

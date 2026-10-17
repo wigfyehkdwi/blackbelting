@@ -17,6 +17,7 @@ game_task *literal_img(float x, float y, char* texture_path) {
 }
 
 static int handle_spawn(game_task *self) {
+	game_scale_sprite(self->sprite, 1);
 	return 0;
 }
 

@@ -3,6 +3,7 @@
 #include "../enemy.h"
 #include "../sign.h"
 #include "../literal.h"
+#include "../tiles.h"
 
 static int handle_spawn(game_task *self);
 
@@ -16,6 +17,7 @@ game_task *new_level_1() {
 
 static int handle_spawn(game_task *self) {
 	/* updating the current level is now carried out by game_mgr.c */
+	if (game_spawn(self, tiled_img(0, 0, "res/game/sky.png"))) return -1;
 	if (game_spawn(self, literal_img(0, 0, "res/levels/level_1.png"))) return -1;
 	if (game_spawn(self, player())) return -1;
 	if (game_spawn(self, enemy())) return -1;

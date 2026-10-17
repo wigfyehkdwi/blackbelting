@@ -44,8 +44,9 @@ int game_spawn(game_task *parent, game_task *task) {
 	/* resolve staged textures */
 	if (task->sprite != NULL && task->sprite->texture != NULL) {
 		char *filepath = (void *)task->sprite->texture;
+		printf("filepath: %s, ptr: %p\n", filepath, filepath);
 		int result = game_load_texture(task, filepath);
-		printf("%s %d\n", filepath, result);
+		printf("%p %d\n", task->sprite->texture, result);
 		free(filepath);
 		if (result) return -126;
 	}
