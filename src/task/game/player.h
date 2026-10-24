@@ -2,4 +2,4 @@
 
 #define PLAYER_MAGIC 0x706c7972
 
-game_task *player();
+game_task *player(float x, float y);

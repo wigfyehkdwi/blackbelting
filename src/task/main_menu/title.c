@@ -18,7 +18,7 @@ static int handle_spawn(game_task *self) {
 
 	self->sprite->texture = IMG_LoadTexture(self->game->renderer, "res/main_menu/title.png");
 	if (self->sprite->texture == NULL) return -1;
-	game_scale_sprite(self->sprite, 1);
+	game_scale(self, 1, 1);
 
 	self->sprite->x = 0;
 	self->sprite->y = 0;

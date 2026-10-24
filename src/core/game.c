@@ -43,11 +43,17 @@ int game_spawn(game_task *parent, game_task *task) {
 
 	/* resolve staged textures */
 	if (task->sprite != NULL && task->sprite->texture != NULL) {
-		char *filepath = (void *)task->sprite->texture;
-		printf("filepath: %s, ptr: %p\n", filepath, filepath);
+		float *staged = (float *)task->sprite->texture;
+
+		float scale_x = *(staged + 0);
+		float scale_y = *(staged + 1);
+
+		char *filepath = (char *)(staged + 2);
 		int result = game_load_texture(task, filepath);
-		printf("%p %d\n", task->sprite->texture, result);
-		free(filepath);
+		if (scale_x != 0.0) task->sprite->w = task->sprite->texture->w * scale_x;
+		if (scale_y != 0.0) task->sprite->h = task->sprite->texture->h * scale_y;
+
+		free(staged);
 		if (result) return -126;
 	}
 
@@ -133,9 +139,12 @@ int game_load_sprite(game_task *task, char *filepath) {
 
 	if (task->game == NULL) {
 		size_t copy_size = strlen(filepath) + 1;
-		char *filepath_staged = malloc(copy_size);
+		void *staged = malloc(copy_size + sizeof(float)*2);
+		memset(staged, 0, sizeof(float)*2);
+
+		char *filepath_staged = (char *)((float *)staged + 2);
 		memcpy(filepath_staged, filepath, copy_size);
-		*(void **)&task->sprite->texture = filepath_staged;
+		*(void **)&task->sprite->texture = staged;
 		return 0;
 	}
 
@@ -226,7 +235,14 @@ bool game_is_touching_task(game_task *task, game_task *target) {
 	return false;
 }
 
-void game_scale_sprite(game_sprite *sprite, float mul) {
-	sprite->w = sprite->texture->w * mul;
-	sprite->h = sprite->texture->h * mul;
+void game_scale(game_task *task, float scale_x, float scale_y) {
+	if (task->game == NULL) { /* Staged sprites */
+		float *staged = (float *)task->sprite->texture;
+		*staged = scale_x;
+		*(staged + 1) = scale_y;
+		
+	}
+
+	task->sprite->w = task->sprite->texture->w * scale_x;
+	task->sprite->h = task->sprite->texture->h * scale_y;
 }

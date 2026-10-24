@@ -50,8 +50,8 @@ int apply_weapon(game_task *self, int idx) {
 	if (self->sprite == NULL) return -1;
 	self->sprite->texture = IMG_LoadTexture(self->game->renderer, type->sprite_path);
 	if (self->sprite->texture == NULL) return -1;
-	SDL_SetTextureScaleMode(self->sprite->texture, SDL_SCALEMODE_PIXELART);
-	game_scale_sprite(self->sprite, type->scale);
+	game_set_pixelart(self);
+	game_scale(self, type->scale, type->scale);
 	return 0;
 }
 

@@ -1,3 +1,5 @@
+#ifndef GAME_H
+#define GAME_H
 #include <SDL3/SDL.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -77,6 +79,20 @@ int game_draw(game_task *task);
 bool game_is_touching_rect(game_sprite *sprite, float x, float y, float w, float h);
 int game_is_clicked(game_task *task);
 bool game_is_touching_sprite(game_task *task, game_sprite *target);
-void game_scale_sprite(game_sprite *sprite, float mul);
-
+void game_scale(game_task *task, float scale_x, float scale_y);
 #define game_is_touching_pos(sprite, x, y) game_is_touching_rect(sprite, x, y, 0, 0)
+
+inline void game_move(game_task *task, float x, float y) {
+	task->sprite->x = x;
+	task->sprite->y = y;
+}
+
+inline void game_tform(game_task *task, float x, float y, float scale_x, float scale_y) {
+	game_move(task, x, y);
+	game_scale(task, scale_x, scale_y);
+}
+
+inline void game_set_pixelart(game_task *task) {
+	SDL_SetTextureScaleMode(task->sprite->texture, SDL_SCALEMODE_PIXELART);
+}
+#endif

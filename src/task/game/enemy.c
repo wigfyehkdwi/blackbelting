@@ -24,23 +24,25 @@ static char *diag_text[] = {
 	"hey i wanna fight!"
 };
 
-game_task *enemy() {
+game_task *enemy(float x, float y) {
 	game_task *self = new_game_task();
 	if (self == NULL) return NULL;
 	self->on_spawn = handle_spawn;
 	self->on_tick = handle_tick;
 	self->data = calloc(sizeof(enemy_data), 1);
 	if (self->data == NULL) return NULL;
+
+	self->sprite = new_game_sprite();
+	if (self->sprite == NULL) return NULL;
+	game_move(self, x, y);
 	return self;
 }
 
 static int handle_spawn(game_task *self) {
-	self->sprite = calloc(sizeof(game_sprite), 1);
-	self->sprite->y = SIX_SEVEN;
-	if (self->sprite == NULL) return -1;
 	self->sprite->texture = IMG_LoadTexture(self->game->renderer, "res/game/enemy_a.png");
 	if (self->sprite->texture == NULL) return -1;
-	game_scale_sprite(self->sprite, 4);
+	game_set_pixelart(self);
+	game_scale(self, 4, 4);
 
 	game_adapter *adapter = calloc(sizeof(game_adapter), 1);
 	if (adapter == NULL) return -1;

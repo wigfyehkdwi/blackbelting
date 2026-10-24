@@ -3,13 +3,14 @@
 static int handle_spawn(game_task *self);
 static void handle_tick(game_task *self);
 
-game_task *literal_img(float x, float y, char* texture_path) {
+game_task *literal_img(float x, float y, float scale_x, float scale_y, char* texture_path) {
 	game_task *self = new_game_task();
 	if (self == NULL) return NULL;
 	self->on_spawn = handle_spawn;
 	self->on_tick = handle_tick;
 
 	if (game_load_sprite(self, texture_path)) return NULL;
+	game_tform(self, x, y, scale_x, scale_y);
 	self->sprite->x = x;
 	self->sprite->y = y;
 
@@ -17,7 +18,6 @@ game_task *literal_img(float x, float y, char* texture_path) {
 }
 
 static int handle_spawn(game_task *self) {
-	game_scale_sprite(self->sprite, 1);
 	return 0;
 }
 

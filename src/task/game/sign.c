@@ -23,7 +23,7 @@ game_task *sign(float x, float y) {
 static int handle_spawn(game_task *self) {
 	self->sprite->texture = IMG_LoadTexture(self->game->renderer, "res/game/sign.png");
 	if (self->sprite->texture == NULL) return -1;
-	game_scale_sprite(self->sprite, 4);
+	game_scale(self, 4, 4);
 
 	return 0;
 }

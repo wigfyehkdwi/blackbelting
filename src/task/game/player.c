@@ -16,7 +16,7 @@ static void handle_tick(game_task *self);
 static void handle_event(game_task *self);
 static void handle_key(player_data *data, key_mappings *keys, Uint32 key, bool state);
 
-game_task *player() {
+game_task *player(float x, float y) {
 	game_task *self = new_game_task();
 	if (self == NULL) return NULL;
 	self->magic = PLAYER_MAGIC;
@@ -35,13 +35,14 @@ game_task *player() {
 	self->sprite = new_game_sprite();
 	if (self->sprite == NULL) return NULL;
 
+	game_move(self, x, y);
 	return self;
 }
 
 static int handle_spawn(game_task *self) {
 	if (game_load_sprite(self, "res/game/player_a.png")) return -1;
-	SDL_SetTextureScaleMode(self->sprite->texture, SDL_SCALEMODE_PIXELART);
-	game_scale_sprite(self->sprite, 4);
+	game_set_pixelart(self);
+	game_scale(self, 4, 4);
 
 	game_task *mgr = self->game->manager;
 	game_services *svc = mgr->data;
