@@ -7,10 +7,7 @@
 #define SIX_SEVEN 6-7+6*7+6+7+6+7
 
 typedef struct game_sprite {
-	float x;
-	float y;
-	float w;
-	float h;
+	SDL_FRect rect;
 	double angle;
 	SDL_FPoint *center;
 	SDL_FlipMode flip;
@@ -74,13 +71,12 @@ int game_switch_event(game_task *task, uint32_t event_type, void (*handler)(game
 void game_free(game_task *task);
 void game_event(game_state *game);
 void game_tick(game_state *game);
+void game_tick_all(game_task *self);
 int game_load_sprite(game_task *task, char *filepath);
 int game_draw(game_task *task);
-bool game_is_touching_rect(game_sprite *sprite, float x, float y, float w, float h);
 int game_is_clicked(game_task *task);
 bool game_is_touching_sprite(game_task *task, game_sprite *target);
 void game_scale(game_task *task, float scale_x, float scale_y);
-#define game_is_touching_pos(sprite, x, y) game_is_touching_rect(sprite, x, y, 0, 0)
 
 inline void game_move(game_task *task, float x, float y) {
 	task->sprite->x = x;

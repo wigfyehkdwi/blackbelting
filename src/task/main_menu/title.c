@@ -20,8 +20,8 @@ static int handle_spawn(game_task *self) {
 	if (self->sprite->texture == NULL) return -1;
 	game_scale(self, 1, 1);
 
-	self->sprite->x = 0;
-	self->sprite->y = 0;
+	self->sprite->rect.x = 0;
+	self->sprite->rect.y = 0;
 	self->sprite->ui = true;
 	return 0;
 }

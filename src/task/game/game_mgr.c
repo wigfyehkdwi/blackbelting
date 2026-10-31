@@ -3,7 +3,6 @@
 #include "level/levels.h"
 
 static int handle_spawn(game_task *self);
-static void handle_tick(game_task *self);
 static void handle_event(game_task *self);
 static int switch_level(game_task *self, int idx);
 
@@ -11,7 +10,7 @@ game_task *game_mgr() {
 	game_task *self = new_game_task();
 	if (self == NULL) return NULL;
 	self->on_spawn = handle_spawn;
-	self->on_tick = handle_tick;
+	self->on_tick = game_tick_all;
 	self->on_event = handle_event;
 
 	game_services *svc = calloc(sizeof(game_services), 1);
@@ -38,9 +37,6 @@ static int handle_spawn(game_task *self) {
 	}
 
 	return 0;
-}
-
-static void handle_tick(game_task *self) {
 }
 
 static void handle_event(game_task *self) {

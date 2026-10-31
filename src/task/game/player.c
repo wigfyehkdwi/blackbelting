@@ -63,17 +63,17 @@ static void handle_tick(game_task *self) {
 	mortal_tick(self, adapter->mortality);
 
 	/* movement (very basic for now) */
-	if (data->up) self->sprite->y -= self->game->delta*0.63;
-	if (data->down) self->sprite->y += self->game->delta*0.63;
-	if (data->left) self->sprite->x -= self->game->delta*0.63;
-	if (data->right) self->sprite->x += self->game->delta*0.63;
+	if (data->up) self->sprite->rect.y -= self->game->delta*0.63;
+	if (data->down) self->sprite->rect.y += self->game->delta*0.63;
+	if (data->left) self->sprite->rect.x -= self->game->delta*0.63;
+	if (data->right) self->sprite->rect.x += self->game->delta*0.63;
 
 	/* move the camera */
 	int win_w = 0;
 	int win_h = 0;
 	SDL_GetWindowSize(self->game->window, &win_w, &win_h);
-	self->game->camera.x = SDL_clamp(self->game->camera.x + win_w/2, self->sprite->x - 100, self->sprite->x + 100) - win_w/2;
-	self->game->camera.y = SDL_clamp(self->game->camera.y + win_h/2, self->sprite->y - 100, self->sprite->y + 100) - win_h/2;
+	self->game->camera.x = SDL_clamp(self->game->camera.x + win_w/2, self->sprite->rect.x - 100, self->sprite->rect.x + 100) - win_w/2;
+	self->game->camera.y = SDL_clamp(self->game->camera.y + win_h/2, self->sprite->rect.y - 100, self->sprite->rect.y + 100) - win_h/2;
 
 	game_draw(self);
 }

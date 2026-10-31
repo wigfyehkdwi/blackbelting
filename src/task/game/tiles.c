@@ -11,8 +11,8 @@ game_task *tiled_img(float x, float y, char* texture_path) {
 	self->on_tick = handle_tick;
 
 	if (game_load_sprite(self, texture_path)) return NULL;
-	self->sprite->x = x;
-	self->sprite->y = y;
+	self->sprite->rect.x = x;
+	self->sprite->rect.y = y;
 
 	return self;
 }
@@ -30,8 +30,8 @@ static void handle_tick(game_task *self) {
 	game_camera *cam = &self->game->camera;
 	SDL_Texture *texture = sprite->texture;
 	SDL_FRect rect;
-	rect.w = sprite->w;
-	rect.h = sprite->h;
+	rect.w = sprite->rect.w;
+	rect.h = sprite->rect.h;
 
 	for (float y = -clamp_coord(cam->y, rect.h); ; y += rect.h) {
 		for (float x = -clamp_coord(cam->x, rect.w); ; x += rect.w) {

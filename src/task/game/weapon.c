@@ -62,7 +62,7 @@ static int handle_spawn(game_task *self) {
 }
 
 static float get_x_offset(game_task *self) {
-	float owner_w = self->parent->sprite->w;
+	float owner_w = self->parent->sprite->rect.w;
 	if (self->sprite->flip == SDL_FLIP_HORIZONTAL) return -owner_w + 16;
 	return owner_w - 4;
 }
@@ -72,13 +72,13 @@ static void handle_tick(game_task *self) {
 	if (data->selection < 0) return;
 
 	game_sprite *owner_spr = self->parent->sprite;
-	float old_x = self->sprite->x - get_x_offset(self);
+	float old_x = self->sprite->rect.x - get_x_offset(self);
 	if (owner_spr->x < old_x) self->sprite->flip = SDL_FLIP_HORIZONTAL;
 	else if (owner_spr->x > old_x) self->sprite->flip = SDL_FLIP_NONE;
 
-	self->sprite->x = owner_spr->x + get_x_offset(self);
-	self->sprite->y = owner_spr->y + 3;
-//printf("owner_spr->x = %f, old_x = %f, self->sprite->x = %f")
+	self->sprite->rect.x = owner_spr->x + get_x_offset(self);
+	self->sprite->rect.y = owner_spr->y + 3;
+//printf("owner_spr->x = %f, old_x = %f, self->sprite->rect.x = %f")
 	game_draw(self);
 }
 

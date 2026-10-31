@@ -11,8 +11,8 @@ game_task *literal_img(float x, float y, float scale_x, float scale_y, char* tex
 
 	if (game_load_sprite(self, texture_path)) return NULL;
 	game_tform(self, x, y, scale_x, scale_y);
-	self->sprite->x = x;
-	self->sprite->y = y;
+	self->sprite->rect.x = x;
+	self->sprite->rect.y = y;
 
 	return self;
 }

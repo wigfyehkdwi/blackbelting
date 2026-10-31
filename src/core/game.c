@@ -4,7 +4,6 @@
 
 static void game_nop(game_task *self);
 static int game_inop(game_task *self);
-static bool out_of_range(float val, float a, float b);
 static int game_load_texture(game_task *task, char *filepath);
 
 void game_link(game_task *task) {
@@ -50,8 +49,8 @@ int game_spawn(game_task *parent, game_task *task) {
 
 		char *filepath = (char *)(staged + 2);
 		int result = game_load_texture(task, filepath);
-		if (scale_x != 0.0) task->sprite->w = task->sprite->texture->w * scale_x;
-		if (scale_y != 0.0) task->sprite->h = task->sprite->texture->h * scale_y;
+		if (scale_x != 0.0) task->sprite->rect.w = task->sprite->texture->w * scale_x;
+		if (scale_y != 0.0) task->sprite->rect.h = task->sprite->texture->h * scale_y;
 
 		free(staged);
 		if (result) return -126;
@@ -124,11 +123,16 @@ void game_tick(game_state *game) {
 	int ticks = SDL_GetTicks();
 	game->delta = ticks - game->ticks;
 	game->ticks = ticks;
+	game->manager->on_tick(game->manager);
+	SDL_RenderPresent(game->renderer);
+}
+
+void game_tick_all(game_task *self) {
+	game_state *game = self->game;
 	for (game_task *task = game->tasks.next; task != &game->tasks; task = task->next) {
-		/*printf("ticking task %p\n", task);*/
+		if (task == self) continue; /* Avoid infinite recursion */
 		task->on_tick(task);
 	}
-	SDL_RenderPresent(game->renderer);
 }
 
 int game_load_sprite(game_task *task, char *filepath) {
@@ -162,10 +166,10 @@ int game_draw(game_task *task) {
 
 	SDL_Texture *texture = sprite->texture;
 	SDL_FRect rect;
-	rect.x = sprite->x;
-	rect.y = sprite->y;
-	rect.w = sprite->w;
-	rect.h = sprite->h;
+	rect.x = sprite->rect.x;
+	rect.y = sprite->rect.y;
+	rect.w = sprite->rect.w;
+	rect.h = sprite->rect.h;
 
 	if (!sprite->ui) {
 		rect.x -= game->camera.x;
@@ -173,16 +177,6 @@ int game_draw(game_task *task) {
 	}
 
 	return SDL_RenderTextureRotated(game->renderer, texture, NULL, &rect, sprite->angle, sprite->center, sprite->flip);
-}
-
-static bool out_of_range(float val, float a, float b) {
-	return val < a || val > (a + b);
-}
-
-bool game_is_touching_rect(game_sprite *sprite, float x, float y, float w, float h) {
-	if (out_of_range(x, sprite->x, sprite->w) && out_of_range(x + w, sprite->x, sprite->w)) return false;
-	if (out_of_range(y, sprite->y, sprite->h) && out_of_range(y + h, sprite->y, sprite->h)) return false;
-	return true;
 }
 
 int game_is_clicked(game_task *task) {
@@ -196,15 +190,14 @@ int game_is_clicked(game_task *task) {
 	else return 0;
 
 	SDL_MouseButtonEvent *mouse_event = (SDL_MouseButtonEvent *)event;
-	int mx = mouse_event->x;
-	int my = mouse_event->y;
+	SDL_FPoint point = {mouse_event->x, mouse_event->y};
 
 	if (!sprite->ui) {
-		mx += task->game->camera.x;
-		my += task->game->camera.y;
+		point.x += task->game->camera.x;
+		point.y += task->game->camera.y;
 	}
 
-	return game_is_touching_pos(sprite, mx, my) ? result : 0;
+	return SDL_PointInRectFloat() ? result : 0;
 }
 
 bool game_is_touching_sprite(game_task *task, game_sprite *target) {
@@ -222,18 +215,21 @@ bool game_is_touching_sprite(game_task *task, game_sprite *target) {
 		}
 	}
 
-	return game_is_touching_rect(sprite, tx, ty, target->w - 1, target->h - 1);
+	return game_rects_touching(sprite->rect.x, sprite->rect.y, sprite->rect.w, sprite->rect.h,
+			tx, ty, target->w, target->h);
 }
 
+#if 0
 bool game_is_touching_task(game_task *task, game_task *target) {
 	game_sprite *sprite = task->sprite;
 	SDL_FRect *rect;
 	for (int i = 0; i < target->hitbox_count; i++) {
 		rect = &target->hitboxes[i];
-		if (game_is_touching_rect(sprite, rect->x + sprite->x, rect->y + sprite->y, rect->w - 1, rect->h - 1)) return true;
+		if (game_is_touching_rect(sprite, rect->x + sprite->rect.x, rect->y + sprite->rect.y, rect->w - 1, rect->h - 1)) return true;
 	}
 	return false;
 }
+#endif
 
 void game_scale(game_task *task, float scale_x, float scale_y) {
 	if (task->game == NULL) { /* Staged sprites */
@@ -243,6 +239,6 @@ void game_scale(game_task *task, float scale_x, float scale_y) {
 		
 	}
 
-	task->sprite->w = task->sprite->texture->w * scale_x;
-	task->sprite->h = task->sprite->texture->h * scale_y;
+	task->sprite->rect.w = task->sprite->texture->w * scale_x;
+	task->sprite->rect.h = task->sprite->texture->h * scale_y;
 }

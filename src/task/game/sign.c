@@ -14,8 +14,8 @@ game_task *sign(float x, float y) {
 
 	self->sprite = new_game_sprite();
 	if (self->sprite == NULL) return NULL;
-	self->sprite->x = x;
-	self->sprite->y = y;
+	self->sprite->rect.x = x;
+	self->sprite->rect.y = y;
 
 	return self;
 }
