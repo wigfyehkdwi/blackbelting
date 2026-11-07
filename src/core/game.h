@@ -79,8 +79,8 @@ bool game_is_touching_sprite(game_task *task, game_sprite *target);
 void game_scale(game_task *task, float scale_x, float scale_y);
 
 inline void game_move(game_task *task, float x, float y) {
-	task->sprite->x = x;
-	task->sprite->y = y;
+	task->sprite->rect.x = x;
+	task->sprite->rect.y = y;
 }
 
 inline void game_tform(game_task *task, float x, float y, float scale_x, float scale_y) {

@@ -36,7 +36,7 @@ static void handle_tick(game_task *self) {
 static void handle_event(game_task *self) {
 	game_task *root = &self->game->tasks;
 	if (game_is_clicked(self) == 2) {
-		game_killall(self);
+		game_killall(self->game->manager);
 		game_spawn(root, game_mgr());
 	}
 }

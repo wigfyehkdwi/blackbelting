@@ -24,6 +24,7 @@ void game_link(game_task *task) {
 }
 
 void game_unlink(game_task *task) {
+	printf("unlinking task %p\n", task);
 	task->next->prev = task->prev;
 	task->prev->next = task->next;
 }
@@ -197,26 +198,24 @@ int game_is_clicked(game_task *task) {
 		point.y += task->game->camera.y;
 	}
 
-	return SDL_PointInRectFloat() ? result : 0;
+	return SDL_PointInRectFloat(&point, &sprite->rect) ? result : 0;
 }
 
 bool game_is_touching_sprite(game_task *task, game_sprite *target) {
 	game_sprite *sprite = task->sprite;
-	float tx = target->x;
-	float ty = target->y;
+	SDL_FRect tr = {target->rect.x, target->rect.y, target->rect.w, target->rect.h};
 
 	if (target->ui != sprite->ui) {
 		if (target->ui) {
-			tx -= task->game->camera.x;
-			ty -= task->game->camera.y;
+			tr.x -= task->game->camera.x;
+			tr.y -= task->game->camera.y;
 		} else {
-			tx += task->game->camera.x;
-			ty += task->game->camera.y;
+			tr.x += task->game->camera.x;
+			tr.y += task->game->camera.y;
 		}
 	}
 
-	return game_rects_touching(sprite->rect.x, sprite->rect.y, sprite->rect.w, sprite->rect.h,
-			tx, ty, target->w, target->h);
+	return SDL_HasRectIntersectionFloat(&sprite->rect, &tr);
 }
 
 #if 0

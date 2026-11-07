@@ -73,11 +73,11 @@ static void handle_tick(game_task *self) {
 
 	game_sprite *owner_spr = self->parent->sprite;
 	float old_x = self->sprite->rect.x - get_x_offset(self);
-	if (owner_spr->x < old_x) self->sprite->flip = SDL_FLIP_HORIZONTAL;
-	else if (owner_spr->x > old_x) self->sprite->flip = SDL_FLIP_NONE;
+	if (owner_spr->rect.x < old_x) self->sprite->flip = SDL_FLIP_HORIZONTAL;
+	else if (owner_spr->rect.x > old_x) self->sprite->flip = SDL_FLIP_NONE;
 
-	self->sprite->rect.x = owner_spr->x + get_x_offset(self);
-	self->sprite->rect.y = owner_spr->y + 3;
+	self->sprite->rect.x = owner_spr->rect.x + get_x_offset(self);
+	self->sprite->rect.y = owner_spr->rect.y + 3;
 //printf("owner_spr->x = %f, old_x = %f, self->sprite->rect.x = %f")
 	game_draw(self);
 }
