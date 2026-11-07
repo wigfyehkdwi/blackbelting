@@ -30,6 +30,7 @@ game_task *player(float x, float y) {
 	if (adapter == NULL) return NULL;
 	adapter->mortality = calloc(sizeof(mortal_state), 1);
 	if (adapter->mortality == NULL) return NULL;
+	adapter->mortality->health = 40;
 	self->adapter = adapter;
 
 	self->sprite = new_game_sprite();

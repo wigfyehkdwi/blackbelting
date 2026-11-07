@@ -1,8 +1,10 @@
 #include "game_mgr.h"
 
 #include "level/levels.h"
+#include "adapter.h"
 
 static int handle_spawn(game_task *self);
+static void handle_tick(game_task *self);
 static void handle_event(game_task *self);
 static int switch_level(game_task *self, int idx);
 
@@ -10,7 +12,7 @@ game_task *game_mgr() {
 	game_task *self = new_game_task();
 	if (self == NULL) return NULL;
 	self->on_spawn = handle_spawn;
-	self->on_tick = game_tick_all;
+	self->on_tick = handle_tick;
 	self->on_event = handle_event;
 
 	game_services *svc = calloc(sizeof(game_services), 1);
@@ -44,6 +46,25 @@ static void handle_event(game_task *self) {
 		self->game->exit = true;
 	}
 }
+
+static void handle_tick(game_task *self) {
+        game_state *game = self->game;
+        for (game_task *task = game->tasks.next; task != &game->tasks; task = task->next) {
+                if (task == self) continue; /* Avoid infinite recursion */
+                task->on_tick(task);
+
+		game_adapter *adapter = task->adapter;
+		if (adapter == NULL) continue;
+		if (adapter->mortality != NULL) {
+			mortal_tick(task, adapter->mortality);
+			if (adapter->mortality->dead) {
+				game_killall(task);
+				continue;
+			}
+		}
+        }
+}
+
 
 static int switch_level(game_task *self, int idx) {
 	game_services *svc = self->data;

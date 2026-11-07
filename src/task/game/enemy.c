@@ -55,12 +55,9 @@ static int handle_spawn(game_task *self) {
 }
 
 static void handle_tick(game_task *self) {
-	game_adapter *adapter = self->adapter;
-	mortal_tick(self, adapter->mortality);
-	if (adapter->mortality->dead) game_killall(self);
-
 	game_draw(self);
 
+	game_adapter *adapter = self->adapter;
 	enemy_data *state = self->data;
 	game_task *mgr = self->game->manager;
 	game_services *svc = mgr->data;

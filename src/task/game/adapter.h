@@ -1,3 +1,5 @@
+#ifndef ADAPTER_H
+#define ADAPTER_H
 #include "mortal.h"
 
 typedef struct {
@@ -6,3 +8,4 @@ typedef struct {
 } game_adapter;
 
 game_adapter *new_game_adapter();
+#endif

@@ -1,3 +1,5 @@
+#ifndef MORTAL_H
+#define MORTAL_H
 #include "game_mgr.h"
 
 #define DAMAGE_DURATION 500
@@ -11,3 +13,4 @@ typedef struct {
 
 void mortal_tick(game_task *task, mortal_state *state);
 void mortal_hurt(game_task *task, mortal_state *state, int amount, bool grace_period);
+#endif
